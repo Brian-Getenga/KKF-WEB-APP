@@ -1,0 +1,328 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ image.title }} | Gallery | Kenya Karate Federation{% endblock %}
+
+{% block extra_head %}
+<!-- Lightbox CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
+<style>
+    .lb-data .lb-caption { font-weight: 600; font-size: 16px; }
+</style>
+{% if image.meta_description %}
+<meta name="description" content="{{ image.meta_description }}">
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<!-- Header Navigation -->
+<section class="bg-white border-b-2 border-stone-300">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+            <a href="{% url 'gallery:gallery' %}" class="text-[#525252] hover:text-[#FFCD00] font-semibold">
+                <svg class="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Back to Gallery
+            </a>
+            <div class="flex gap-3">
+                {% if previous_image %}
+                <a href="{% url 'gallery:image_detail' previous_image.pk %}" 
+                   class="px-4 py-2 bg-white border-2 border-stone-300 text-[#525252] hover:border-gray-400 font-semibold">
+                    <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    Previous
+                </a>
+                {% endif %}
+                {% if next_image %}
+                <a href="{% url 'gallery:image_detail' next_image.pk %}" 
+                   class="px-4 py-2 bg-white border-2 border-stone-300 text-[#525252] hover:border-gray-400 font-semibold">
+                    Next
+                    <svg class="w-4 h-4 inline-block ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<section class="py-8 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Image Display - Left Side (2 columns) -->
+            <div class="lg:col-span-2">
+                <div class="bg-white border-2 border-stone-300 overflow-hidden">
+                    {% if image.is_video %}
+                    <!-- Video Embed -->
+                    <div class="aspect-video bg-gray-900">
+                        {% if 'youtube.com' in image.video_url or 'youtu.be' in image.video_url %}
+                        <iframe class="w-full h-full" 
+                                src="https://www.youtube.com/embed/{{ image.video_url|slice:'-11:' }}"
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                        </iframe>
+                        {% elif 'vimeo.com' in image.video_url %}
+                        <iframe class="w-full h-full"
+                                src="https://player.vimeo.com/video/{{ image.video_url|slice:'-9:' }}"
+                                frameborder="0"
+                                allow="autoplay; fullscreen; picture-in-picture"
+                                allowfullscreen>
+                        </iframe>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <!-- Image Display -->
+                    <div class="relative">
+                        <a href="{{ image.image.url }}" 
+                           data-lightbox="image" 
+                           data-title="{{ image.title }}">
+                            <img src="{{ image.image.url }}" 
+                                 alt="{{ image.title }}"
+                                 class="w-full h-auto">
+                        </a>
+                        {% if image.is_featured %}
+                        <div class="absolute top-4 right-4 px-3 py-1.5 bg-[#FFCD00] text-black font-bold text-sm flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                            Featured
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Details Sidebar - Right Side (1 column) -->
+            <div class="space-y-6">
+                
+                <!-- Title & Description -->
+                <div class="bg-white border-2 border-stone-300 p-6">
+                    <h1 class="text-3xl font-black text-[#525252] mb-4">{{ image.title }}</h1>
+                    
+                    {% if image.caption %}
+                    <p class="text-gray-600 mb-4 leading-relaxed">{{ image.caption }}</p>
+                    {% endif %}
+
+                    <!-- Category Badge -->
+                    {% if image.category %}
+                    <a href="{% url 'gallery:category' image.category.slug %}" 
+                       class="inline-block px-4 py-2 bg-[#7ccf00] text-white font-bold text-sm hover:bg-green-600">
+                        {% if image.category.icon %}
+                        <i class="{{ image.category.icon }} mr-1"></i>
+                        {% endif %}
+                        {{ image.category.name }}
+                    </a>
+                    {% endif %}
+                </div>
+
+                <!-- Metadata -->
+                <div class="bg-white border-2 border-stone-300 p-6">
+                    <h2 class="text-lg font-bold text-[#525252] mb-4 pb-3 border-b-2 border-stone-300">Details</h2>
+                    <div class="space-y-4">
+                        {% if image.photographer %}
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-gray-200 flex items-center justify-center mr-3 flex-shrink-0">
+                                <svg class="w-5 h-5 text-[#525252]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-500 uppercase font-semibold mb-1">Photographer</div>
+                                <div class="text-[#525252] font-medium">{{ image.photographer }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if image.location %}
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-gray-200 flex items-center justify-center mr-3 flex-shrink-0">
+                                <svg class="w-5 h-5 text-[#525252]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-500 uppercase font-semibold mb-1">Location</div>
+                                <div class="text-[#525252] font-medium">{{ image.location }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if image.event_date %}
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-gray-200 flex items-center justify-center mr-3 flex-shrink-0">
+                                <svg class="w-5 h-5 text-[#525252]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-500 uppercase font-semibold mb-1">Event Date</div>
+                                <div class="text-[#525252] font-medium">{{ image.event_date|date:"F d, Y" }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-gray-200 flex items-center justify-center mr-3 flex-shrink-0">
+                                <svg class="w-5 h-5 text-[#525252]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-500 uppercase font-semibold mb-1">Uploaded</div>
+                                <div class="text-[#525252] font-medium">{{ image.uploaded_at|date:"F d, Y" }}</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-gray-200 flex items-center justify-center mr-3 flex-shrink-0">
+                                <svg class="w-5 h-5 text-[#525252]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-500 uppercase font-semibold mb-1">Views</div>
+                                <div class="text-[#525252] font-medium">{{ image.view_count }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tags -->
+                {% if image.tags.all %}
+                <div class="bg-white border-2 border-stone-300 p-6">
+                    <h2 class="text-lg font-bold text-[#525252] mb-4 pb-3 border-b-2 border-stone-300">Tags</h2>
+                    <div class="flex flex-wrap gap-2">
+                        {% for tag in image.tags.all %}
+                        <a href="{% url 'gallery:gallery' %}?tag={{ tag.slug }}" 
+                           class="px-3 py-1 bg-gray-200 text-[#525252] text-sm font-semibold hover:bg-[#FFCD00] hover:text-black">
+                            #{{ tag.name }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Share Section -->
+                <div class="bg-white border-2 border-stone-300 p-6">
+                    <h2 class="text-lg font-bold text-[#525252] mb-4 pb-3 border-b-2 border-stone-300">Share</h2>
+                    <div class="flex gap-3">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
+                           target="_blank"
+                           class="flex-1 px-4 py-3 bg-[#2b7fff] text-white font-semibold text-center hover:bg-blue-700">
+                            <svg class="w-5 h-5 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                            Facebook
+                        </a>
+                        <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ image.title }}" 
+                           target="_blank"
+                           class="flex-1 px-4 py-3 bg-[#525252] text-white font-semibold text-center hover:bg-black">
+                            <svg class="w-5 h-5 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                            </svg>
+                            Twitter
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Images -->
+{% if related_images %}
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="mb-8">
+            <h2 class="text-3xl font-black text-[#525252] mb-2">Related Images</h2>
+            <div class="h-1 w-24 bg-[#FFCD00]"></div>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {% for item in related_images %}
+            <a href="{% url 'gallery:image_detail' item.pk %}" 
+               class="group block bg-white border-2 border-stone-300 hover:border-[#FFCD00] overflow-hidden">
+                <div class="aspect-square bg-gray-100 overflow-hidden relative">
+                    {% if item.thumbnail %}
+                    <img src="{{ item.thumbnail.url }}" alt="{{ item.title }}" 
+                         class="w-full h-full object-cover group-hover:scale-110">
+                    {% elif item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.title }}" 
+                         class="w-full h-full object-cover group-hover:scale-110">
+                    {% endif %}
+                    
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white opacity-0 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="p-3">
+                    <h3 class="text-sm font-semibold text-[#525252] group-hover:text-[#FFCD00] line-clamp-1">
+                        {{ item.title }}
+                    </h3>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Call to Action -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+        <div class="mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-[#FFCD00]">
+                <svg class="w-8 h-8 text-black" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+        </div>
+        <h2 class="text-4xl md:text-5xl font-black text-[#525252] mb-6">
+            Explore More
+        </h2>
+        <p class="text-[#525252] text-lg md:text-xl mb-10 max-w-2xl mx-auto">
+            Discover more amazing moments from our karate community and events.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-6 justify-center">
+            <a href="{% url 'gallery:gallery' %}" 
+               class="px-10 py-4 bg-[#FFCD00] text-black font-bold text-lg hover:bg-[#e6b800]">
+                View All Images
+            </a>
+            {% if image.category %}
+            <a href="{% url 'gallery:category' image.category.slug %}" 
+               class="px-10 py-4 bg-transparent border-2 border-stone-300 text-[#525252] font-bold text-lg hover:border-[#FFCD00] hover:text-[#FFCD00]">
+                More from {{ image.category.name }}
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<!-- Lightbox JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+<script>
+    lightbox.option({
+        'resizeDuration': 200,
+        'wrapAround': true,
+        'albumLabel': 'Image %1 of %2',
+        'fadeDuration': 300,
+        'imageFadeDuration': 300
+    });
+</script>
+{% endblock %}

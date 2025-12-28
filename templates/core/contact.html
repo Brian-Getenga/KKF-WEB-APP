@@ -1,0 +1,327 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Contact Us | Kenya Karate Federation{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="relative h-[400px] bg-black flex items-center justify-center overflow-hidden">
+    <img src="{% static 'images/contact-hero.jpg' %}" alt="Contact" 
+         class="absolute w-full h-full object-cover opacity-20">
+    
+    <div class="relative z-10 text-center px-6">
+        <h1 class="text-5xl md:text-7xl font-black text-white mb-6">
+            Get in <span class="text-[#FFCD00]">Touch</span>
+        </h1>
+        <p class="text-xl text-gray-300 max-w-2xl mx-auto">
+            Have questions? We're here to help you start your karate journey
+        </p>
+    </div>
+</section>
+
+<!-- Contact Options Cards -->
+<section class="py-16 bg-white border-b-2 border-gray-200">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- Phone -->
+            <div class="bg-white p-8 border-2 border-gray-200 hover:border-[#FFCD00] transition-colors">
+                <div class="w-16 h-16 bg-[#FFCD00] flex items-center justify-center mb-6">
+                    <svg class="w-8 h-8 text-black" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-black mb-4">Call Us</h3>
+                <p class="text-gray-600 mb-4">Mon-Fri: 8AM - 8PM<br>Sat-Sun: 9AM - 6PM</p>
+                <a href="tel:{{ contact_info.phone_primary }}" class="text-[#FFCD00] hover:text-[#e6b800] font-semibold text-lg transition-colors block mb-2">
+                    {{ contact_info.phone_primary|default:"+254 700 123 456" }}
+                </a>
+                <a href="tel:{{ contact_info.phone_secondary }}" class="text-[#FFCD00] hover:text-[#e6b800] font-semibold text-lg transition-colors block">
+                    {{ contact_info.phone_secondary|default:"+254 733 456 789" }}
+                </a>
+            </div>
+
+            <!-- Email -->
+            <div class="bg-white p-8 border-2 border-gray-200 hover:border-[#7ccf00] transition-colors">
+                <div class="w-16 h-16 bg-[#7ccf00] flex items-center justify-center mb-6">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-black mb-4">Email Us</h3>
+                <p class="text-gray-600 mb-4">We'll respond within 24 hours</p>
+                <a href="mailto:{{ contact_info.email }}" class="text-[#7ccf00] hover:text-[#6bb800] font-semibold break-all transition-colors block mb-2">
+                    {{ contact_info.email|default:"info@kenyakarate.or.ke" }}
+                </a>
+                <a href="mailto:admin@kenyakarate.or.ke" class="text-[#7ccf00] hover:text-[#6bb800] font-semibold break-all transition-colors block">
+                    admin@kenyakarate.or.ke
+                </a>
+            </div>
+
+            <!-- Location -->
+            <div class="bg-white p-8 border-2 border-gray-200 hover:border-[#2b7fff] transition-colors">
+                <div class="w-16 h-16 bg-[#2b7fff] flex items-center justify-center mb-6">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-black mb-4">Visit Us</h3>
+                <p class="text-gray-600 mb-4">
+                    {{ contact_info.address|default:"Nyayo National Stadium" }}<br>
+                    Nairobi, Kenya<br>
+                    {{ contact_info.po_box|default:"P.O. Box 12345-00100" }}
+                </p>
+                <a href="#map" class="text-[#2b7fff] hover:text-[#1e5dcc] font-semibold transition-colors">
+                    View on Map →
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Form & Map -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid lg:grid-cols-2 gap-12">
+            <!-- Contact Form -->
+            <div>
+                <div class="mb-8">
+                    <h2 class="text-4xl font-black text-black mb-4">
+                        Send us a <span class="text-[#FFCD00]">Message</span>
+                    </h2>
+                    <p class="text-gray-600 text-lg">
+                        Fill out the form below and we'll get back to you as soon as possible
+                    </p>
+                </div>
+
+                {% if messages %}
+                <div class="mb-6">
+                    {% for message in messages %}
+                    <div class="p-4 {% if message.tags == 'success' %}bg-green-100 border-green-500 text-green-700{% else %}bg-red-100 border-red-500 text-red-700{% endif %} border-2">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form id="contact-form" method="POST" action="{% url 'core:contact' %}" 
+                      class="bg-white p-8 border-2 border-gray-200 space-y-6">
+                    {% csrf_token %}
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="id_name" class="block text-black font-semibold mb-2">
+                                Full Name *
+                            </label>
+                            <input type="text" name="name" id="id_name" required
+                                   class="w-full px-4 py-3 bg-white border-2 border-gray-300 text-black placeholder-gray-500 
+                                          focus:border-[#FFCD00] focus:outline-none transition-colors"
+                                   placeholder="John Doe">
+                        </div>
+
+                        <div>
+                            <label for="id_email" class="block text-black font-semibold mb-2">
+                                Email Address *
+                            </label>
+                            <input type="email" name="email" id="id_email" required
+                                   class="w-full px-4 py-3 bg-white border-2 border-gray-300 text-black placeholder-gray-500 
+                                          focus:border-[#FFCD00] focus:outline-none transition-colors"
+                                   placeholder="john@example.com">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="id_phone" class="block text-black font-semibold mb-2">
+                            Phone Number
+                        </label>
+                        <input type="tel" name="phone" id="id_phone"
+                               class="w-full px-4 py-3 bg-white border-2 border-gray-300 text-black placeholder-gray-500 
+                                      focus:border-[#FFCD00] focus:outline-none transition-colors"
+                               placeholder="+254 700 000 000">
+                    </div>
+
+                    <div>
+                        <label for="id_subject" class="block text-black font-semibold mb-2">Subject *</label>
+                        <select name="subject" id="id_subject" required
+                                class="w-full px-4 py-3 bg-white border-2 border-gray-300 text-black 
+                                       focus:border-[#FFCD00] focus:outline-none transition-colors">
+                            <option value="">Select a subject</option>
+                            <option value="general">General Inquiry</option>
+                            <option value="classes">Classes Information</option>
+                            <option value="membership">Membership</option>
+                            <option value="schedule">Schedule & Timing</option>
+                            <option value="competitions">Competitions</option>
+                            <option value="partnership">Partnership Opportunities</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="id_message" class="block text-black font-semibold mb-2">
+                            Message *
+                        </label>
+                        <textarea name="message" id="id_message" rows="6" required
+                                  class="w-full px-4 py-3 bg-white border-2 border-gray-300 text-black placeholder-gray-500 
+                                         focus:border-[#FFCD00] focus:outline-none transition-colors resize-none"
+                                  placeholder="Tell us how we can help you..."></textarea>
+                    </div>
+
+                    <button type="submit" 
+                            class="w-full px-8 py-4 bg-[#FFCD00] text-black font-black text-lg
+                                   hover:bg-[#e6b800] transition-colors flex items-center justify-center gap-2">
+                        <span>Send Message</span>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+                        </svg>
+                    </button>
+
+                    <p class="text-gray-600 text-sm text-center">
+                        By submitting this form, you agree to our privacy policy
+                    </p>
+                </form>
+            </div>
+
+            <!-- Map & Additional Info -->
+            <div class="space-y-8">
+                <!-- Google Maps -->
+                <div id="map" class="border-2 border-gray-200 h-[400px] overflow-hidden">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.819698256729!2d36.81809431475395!3d-1.2832534990646086!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f11295f0a4ff7%3A0x5c9f66e44a81cbfd!2sNyayo%20National%20Stadium!5e0!3m2!1sen!2ske!4v1234567890123" 
+                            width="100%" height="100%" class="border-0" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+
+                <!-- Opening Hours -->
+                <div class="bg-white p-8 border-2 border-gray-200">
+                    <h3 class="text-2xl font-bold text-black mb-6 pb-2 border-b-2 border-[#FFCD00]">
+                        Opening Hours
+                    </h3>
+                    <div class="space-y-3 text-gray-700">
+                        <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                            <span class="font-semibold">Monday - Friday</span>
+                            <span class="text-[#FFCD00] font-bold">{{ hours.weekday|default:"6:00 AM - 9:00 PM" }}</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                            <span class="font-semibold">Saturday</span>
+                            <span class="text-[#7ccf00] font-bold">{{ hours.saturday|default:"8:00 AM - 6:00 PM" }}</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                            <span class="font-semibold">Sunday</span>
+                            <span class="text-[#7ccf00] font-bold">{{ hours.sunday|default:"9:00 AM - 5:00 PM" }}</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2">
+                            <span class="font-semibold">Public Holidays</span>
+                            <span class="text-red-600 font-bold">Closed</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="bg-white p-8 border-2 border-gray-200">
+                    <h3 class="text-2xl font-bold text-black mb-6">Quick Links</h3>
+                    <div class="space-y-3">
+                        <a href="{% url 'classes:class_list' %}" 
+                           class="flex items-center gap-3 text-gray-700 hover:text-[#FFCD00] transition-colors">
+                            <span class="w-2 h-2 bg-[#FFCD00]"></span>
+                            Browse Our Classes
+                        </a>
+                        <a href="{% url 'core:instructor_list' %}" 
+                           class="flex items-center gap-3 text-gray-700 hover:text-[#7ccf00] transition-colors">
+                            <span class="w-2 h-2 bg-[#7ccf00]"></span>
+                            Meet Our Instructors
+                        </a>
+                        <a href="{% url 'core:about' %}" 
+                           class="flex items-center gap-3 text-gray-700 hover:text-[#2b7fff] transition-colors">
+                            <span class="w-2 h-2 bg-[#2b7fff]"></span>
+                            About KKF
+                        </a>
+                        <a href="{% url 'accounts:signup' %}" 
+                           class="flex items-center gap-3 text-gray-700 hover:text-[#FFCD00] transition-colors">
+                            <span class="w-2 h-2 bg-[#FFCD00]"></span>
+                            Register as Member
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="py-20 bg-white">
+    <div class="max-w-4xl mx-auto px-6">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-black mb-4">
+                <span class="text-[#FFCD00]">Frequently Asked Questions</span>
+            </h2>
+            <p class="text-gray-600 text-lg">Can't find what you're looking for? Contact us directly</p>
+        </div>
+
+        <div class="space-y-4">
+            <details class="bg-white p-6 border-2 border-gray-200 hover:border-[#FFCD00] transition-colors group">
+                <summary class="flex justify-between items-center cursor-pointer text-black font-bold text-lg">
+                    <span>What are your class schedules?</span>
+                    <svg class="w-5 h-5 text-[#FFCD00] group-open:rotate-180 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                </summary>
+                <p class="mt-4 text-gray-600 leading-relaxed">
+                    We offer classes from Monday to Sunday. Morning classes start at 6:00 AM, afternoon at 2:00 PM, and evening at 6:00 PM. Weekend classes are available on Saturday and Sunday mornings. Visit our schedule page for detailed timings.
+                </p>
+            </details>
+
+            <details class="bg-white p-6 border-2 border-gray-200 hover:border-[#7ccf00] transition-colors group">
+                <summary class="flex justify-between items-center cursor-pointer text-black font-bold text-lg">
+                    <span>Do you offer trial classes?</span>
+                    <svg class="w-5 h-5 text-[#7ccf00] group-open:rotate-180 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                </summary>
+                <p class="mt-4 text-gray-600 leading-relaxed">
+                    Yes! We offer one free trial class for all new students. This allows you to experience our teaching methods and facility before committing to a membership. Book your trial class through our website or call us directly.
+                </p>
+            </details>
+
+            <details class="bg-white p-6 border-2 border-gray-200 hover:border-[#2b7fff] transition-colors group">
+                <summary class="flex justify-between items-center cursor-pointer text-black font-bold text-lg">
+                    <span>What age groups do you cater to?</span>
+                    <svg class="w-5 h-5 text-[#2b7fff] group-open:rotate-180 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                </summary>
+                <p class="mt-4 text-gray-600 leading-relaxed">
+                    We have programs for everyone! Kids (ages 5-12), Teens (13-17), and Adults (18+). Each age group has specially designed curriculum to match their developmental stage and learning needs.
+                </p>
+            </details>
+
+            <details class="bg-white p-6 border-2 border-gray-200 hover:border-[#FFCD00] transition-colors group">
+                <summary class="flex justify-between items-center cursor-pointer text-black font-bold text-lg">
+                    <span>What should I bring to my first class?</span>
+                    <svg class="w-5 h-5 text-[#FFCD00] group-open:rotate-180 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                </summary>
+                <p class="mt-4 text-gray-600 leading-relaxed">
+                    For your first class, just bring comfortable athletic wear and a water bottle. We provide temporary gi (uniform) for trial classes. After joining, you'll need to purchase an official KKF gi from our pro shop.
+                </p>
+            </details>
+        </div>
+    </div>
+</section>
+
+<!-- WhatsApp Floating Button -->
+<a href="https://wa.me/254700123456?text=Hello%2C%20I%27d%20like%20to%20know%20more%20about%20KKF%20classes" 
+   target="_blank"
+   class="fixed bottom-6 right-6 w-16 h-16 bg-green-500 hover:bg-green-600 flex items-center justify-center transition-colors z-50 shadow-lg">
+    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+</a>
+
+<script>
+document.getElementById('contact-form').addEventListener('submit', function(e) {
+    const button = this.querySelector('button[type="submit"]');
+    button.disabled = true;
+    button.innerHTML = '<span>Sending...</span>';
+});
+</script>
+
+{% endblock %}

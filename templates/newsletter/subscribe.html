@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Subscribe to Our Newsletter{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative h-[400px] bg-[#525252] flex items-center justify-center overflow-hidden">
+    <img src="{% static 'images/newsletter_hero.jpg' %}" alt="Newsletter" 
+         class="absolute w-full h-full object-cover opacity-30">
+    <div class="absolute inset-0 bg-black/40"></div>
+    <div class="relative z-10 text-center px-6 max-w-4xl mx-auto">
+        <h1 class="text-5xl md:text-6xl font-black text-white mb-4 leading-tight">
+            Stay Ahead with Our <span class="text-[#FFCD00]">Newsletter</span>
+        </h1>
+        <div class="w-24 h-1 bg-[#FFCD00] mx-auto mb-6"></div>
+        <p class="text-xl text-[#d6d3d1]">
+            Get the latest classes, expert tips, exclusive deals, and blog updates straight to your inbox.
+        </p>
+    </div>
+</section>
+
+<!-- Benefits Section -->
+<section class="py-16 bg-[#f5f5f5]">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        <div class="bg-white rounded-2xl p-8 shadow hover:shadow-lg transition-shadow">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-[#FFCD00] mb-4">
+                <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                          d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+            </div>
+            <h3 class="font-bold text-gray-800 mb-2">Exclusive Deals</h3>
+            <p class="text-gray-600 text-sm">Be the first to access special offers and discounts.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl p-8 shadow hover:shadow-lg transition-shadow">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-[#FFCD00] mb-4">
+                <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                          d="M12 6.253v13M7.5 5C5.754 5 4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253"/>
+                </svg>
+            </div>
+            <h3 class="font-bold text-gray-800 mb-2">Fresh Content</h3>
+            <p class="text-gray-600 text-sm">Weekly updates on new classes and blog articles.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl p-8 shadow hover:shadow-lg transition-shadow">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-[#FFCD00] mb-4">
+                <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                          d="M9 12l2 2 4-4M12 2.944a11.955 11.955 0 00-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622"/>
+                </svg>
+            </div>
+            <h3 class="font-bold text-gray-800 mb-2">Privacy First</h3>
+            <p class="text-gray-600 text-sm">Unsubscribe anytime with just one click.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Subscription Form -->
+<section class="py-16 bg-white">
+    <div class="max-w-3xl mx-auto px-6">
+        <form method="post" action="{% url 'newsletter:subscribe' %}" class="space-y-6">
+            {% csrf_token %}
+            <div>
+                <label for="id_email" class="block font-semibold text-gray-700 mb-2">
+                    Email Address <span class="text-red-500">*</span>
+                </label>
+                <input type="email" name="{{ form.email.name }}" id="id_email" 
+                       class="w-full px-5 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFCD00] focus:border-[#FFCD00] transition"
+                       placeholder="you@example.com" required>
+                {% if form.email.errors %}
+                    <p class="text-red-600 text-sm mt-2">{{ form.email.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for="id_name" class="block font-semibold text-gray-700 mb-2">
+                    Your Name (Optional)
+                </label>
+                <input type="text" name="{{ form.name.name }}" id="id_name" 
+                       class="w-full px-5 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FFCD00] focus:border-[#FFCD00] transition"
+                       placeholder="John Doe">
+            </div>
+
+            <div>
+                <label class="block font-semibold text-gray-700 mb-3">What would you like to receive?</label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {% for choice in form.preferences %}
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="checkbox" name="{{ choice.data.name }}" value="{{ choice.data.value }}" 
+                                   {% if choice.data.selected %}checked{% endif %}
+                                   class="w-5 h-5 text-[#FFCD00] rounded focus:ring-[#FFCD00] border-gray-300">
+                            <span class="text-gray-700">{{ choice.choice_label }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
+                <p class="text-gray-500 text-sm mt-2">We'll personalize your emails based on your interests.</p>
+            </div>
+
+            <!-- Subscription Type -->
+            <div>
+                <label class="block font-semibold text-gray-700 mb-3">Subscription Frequency</label>
+                <div class="flex gap-4">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="frequency" value="weekly" class="w-5 h-5 text-[#FFCD00] focus:ring-[#FFCD00]" checked>
+                        Weekly
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="frequency" value="monthly" class="w-5 h-5 text-[#FFCD00] focus:ring-[#FFCD00]">
+                        Monthly
+                    </label>
+                </div>
+            </div>
+
+            {{ form.website }} <!-- Honeypot -->
+
+            <button type="submit" class="w-full bg-gradient-to-r from-[#FFCD00] to-[#FFC700] hover:from-[#FBBF24] hover:to-[#FFCD00] text-black font-bold py-4 px-6 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 text-lg">
+                Subscribe Now – It's Free!
+            </button>
+        </form>
+
+        <!-- Social Proof -->
+        <div class="mt-12 text-center text-gray-600">
+            <p class="inline-flex items-center justify-center gap-2 text-sm">
+                <svg class="w-6 h-6 text-[#FFCD00]" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                </svg>
+                Join over <strong>15,000</strong> happy subscribers!
+            </p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,346 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ cls.title }} | Kenya Karate Federation{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="relative h-[400px] bg-[#525252] flex items-center justify-center overflow-hidden">
+    {% if cls.image %}
+    <img src="{{ cls.image.url }}" alt="{{ cls.title }}" 
+         class="absolute w-full h-full object-cover opacity-30">
+    {% else %}
+    <img src="{% static 'images/classes-hero.jpg' %}" alt="Karate Classes" 
+         class="absolute w-full h-full object-cover opacity-30">
+    {% endif %}
+    <div class="absolute inset-0 bg-black/40"></div>
+    <div class="relative z-10 text-center px-6 max-w-4xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-3 py-1 bg-[#FFCD00] text-black font-bold text-xs rounded uppercase mb-6">
+            {{ cls.category }}
+        </div>
+        <h1 class="text-5xl md:text-7xl font-black text-white mb-6 leading-tight">
+            {{ cls.title }}
+        </h1>
+        <div class="w-24 h-1 bg-[#FFCD00] mx-auto mb-6"></div>
+        <p class="text-xl text-[#d6d3d1]">
+            {{ cls.description|truncatewords:30 }}
+        </p>
+        
+        <!-- Quick Stats -->
+        <div class="flex flex-wrap items-center justify-center gap-6 mt-8">
+            {% if avg_rating %}
+            <div class="flex items-center gap-2">
+                <div class="flex items-center">
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= avg_rating|floatformat:"0" %}
+                        <svg class="w-5 h-5 text-[#FFCD00]" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                        {% else %}
+                        <svg class="w-5 h-5 text-[#d6d3d1]" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <span class="text-[#d6d3d1]">({{ review_count }})</span>
+            </div>
+            {% endif %}
+            
+            <span class="text-[#7ccf00] font-bold">{{ cls.level }}</span>
+            <span class="text-[#d6d3d1]">{{ cls.duration_minutes }} min</span>
+            <span class="text-[#d6d3d1]">{{ cls.spots_available }}/{{ cls.max_students }} spots</span>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<section class="py-16 bg-[#f5f5f5]">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid lg:grid-cols-3 gap-12">
+            <!-- Main Content Column -->
+            <div class="lg:col-span-2 space-y-12">
+                
+                <!-- About Section -->
+                <div class="bg-white rounded border-2 border-[#d6d3d1] p-8">
+                    <h2 class="text-3xl font-black text-[#525252] mb-6 pb-4 border-b-4 border-[#FFCD00]">About This Class</h2>
+                    <div class="prose prose-lg max-w-none text-[#525252]">
+                        {{ cls.description|linebreaks }}
+                    </div>
+                </div>
+
+                <!-- Instructor Spotlight -->
+                <div class="bg-white rounded border-2 border-[#d6d3d1] p-8">
+                    <h2 class="text-3xl font-black text-[#525252] mb-6 pb-4 border-b-4 border-[#7ccf00]">Your Instructor</h2>
+                    
+                    <div class="flex flex-col md:flex-row gap-8 items-start">
+                        {% if instructor.photo %}
+                        <img src="{{ instructor.photo.url }}" alt="{{ instructor.name }}" 
+                             class="w-32 h-32 rounded object-cover">
+                        {% else %}
+                        <div class="w-32 h-32 bg-[#525252] rounded flex items-center justify-center">
+                            <span class="text-5xl font-black text-[#FFCD00]">{{ instructor.name|first|upper }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        <div>
+                            <h3 class="text-2xl font-bold text-[#525252] mb-2">{{ instructor.name }}</h3>
+                            <p class="text-[#7ccf00] font-bold mb-4">🥋 {{ instructor.belt_rank }}</p>
+                            {% if instructor.bio %}
+                            <p class="text-[#525252] mb-6">{{ instructor.bio|truncatewords:80 }}</p>
+                            {% endif %}
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-[#f5f5f5] p-4 rounded border border-[#d6d3d1]">
+                                    <p class="text-sm text-[#525252]">Experience</p>
+                                    <p class="text-xl font-black text-[#FFCD00]">15+ Years</p>
+                                </div>
+                                <div class="bg-[#f5f5f5] p-4 rounded border border-[#d6d3d1]">
+                                    <p class="text-sm text-[#525252]">Students Trained</p>
+                                    <p class="text-xl font-black text-[#7ccf00]">500+</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class Features Grid -->
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white rounded border-2 border-[#d6d3d1] p-6 hover:border-[#FFCD00] transition-all">
+                        <div class="flex items-center gap-4 mb-4">
+                            <svg class="w-8 h-8 text-[#FFCD00]" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                            </svg>
+                            <h4 class="text-xl font-bold text-[#525252]">Duration</h4>
+                        </div>
+                        <p class="text-[#525252]">{{ cls.duration_minutes }} minutes per session</p>
+                    </div>
+                    
+                    <div class="bg-white rounded border-2 border-[#d6d3d1] p-6 hover:border-[#7ccf00] transition-all">
+                        <div class="flex items-center gap-4 mb-4">
+                            <svg class="w-8 h-8 text-[#7ccf00]" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                            </svg>
+                            <h4 class="text-xl font-bold text-[#525252]">Class Size</h4>
+                        </div>
+                        <p class="text-[#525252]">Maximum {{ cls.max_students }} students</p>
+                        <p class="text-[#7ccf00] font-bold">{{ cls.spots_available }} spots available</p>
+                    </div>
+                    
+                    <div class="bg-white rounded border-2 border-[#d6d3d1] p-6 hover:border-[#2b7fff] transition-all">
+                        <div class="flex items-center gap-4 mb-4">
+                            <svg class="w-8 h-8 text-[#2b7fff]" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"/>
+                            </svg>
+                            <h4 class="text-xl font-bold text-[#525252]">Skill Level</h4>
+                        </div>
+                        <p class="text-[#525252]">{{ cls.level }}</p>
+                    </div>
+                </div>
+
+                <!-- What You'll Learn -->
+                {% if cls.what_youll_learn %}
+                <div class="bg-white rounded border-2 border-[#d6d3d1] p-8">
+                    <h3 class="text-3xl font-black text-[#525252] mb-6 pb-4 border-b-4 border-[#FFCD00]">What You'll Learn</h3>
+                    <div class="prose prose-lg max-w-none text-[#525252]">
+                        {{ cls.what_youll_learn|linebreaks }}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Schedule -->
+                <div class="bg-white rounded border-2 border-[#d6d3d1] p-8">
+                    <h3 class="text-3xl font-black text-[#525252] mb-6 pb-4 border-b-4 border-[#FFCD00]">Class Schedule</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        {% for schedule in schedules %}
+                        <div class="flex items-center gap-6 p-6 bg-[#f5f5f5] rounded border-2 border-[#d6d3d1]">
+                            <svg class="w-10 h-10 text-[#FFCD00]" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                            </svg>
+                            <div>
+                                <p class="text-[#525252] font-bold text-lg">{{ schedule.day_of_week }}</p>
+                                <p class="text-[#FFCD00] font-bold">{{ schedule.start_time|time:"g:i A" }} - {{ schedule.end_time|time:"g:i A" }}</p>
+                                <p class="text-[#525252] text-sm mt-1 flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    {{ schedule.location }}
+                                </p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Reviews Section -->
+                {% if reviews %}
+                <div class="bg-white rounded border-2 border-[#d6d3d1] p-8">
+                    <div class="flex items-center justify-between mb-6 pb-4 border-b-4 border-[#7ccf00]">
+                        <h3 class="text-3xl font-black text-[#525252]">Student Reviews</h3>
+                        {% if can_review %}
+                        <a href="{% url 'classes:add_review' cls.pk %}" 
+                           class="px-6 py-3 bg-[#7ccf00] text-white font-bold rounded hover:bg-[#00c950] transition-colors">
+                            Write Review
+                        </a>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="space-y-6">
+                        {% for review in reviews %}
+                        <div class="p-6 bg-[#f5f5f5] rounded border-2 border-[#d6d3d1]">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-[#FFCD00] rounded-full flex items-center justify-center">
+                                        <span class="text-xl font-black text-black">
+                                            {{ review.user.get_full_name|default:review.user.username|first|upper }}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <p class="text-[#525252] font-bold">{{ review.user.get_full_name|default:review.user.username }}</p>
+                                        <div class="flex items-center gap-1 mt-1">
+                                            {% for i in "12345" %}
+                                            <svg class="w-5 h-5 {% if forloop.counter <= review.rating %}text-[#FFCD00]{% else %}text-[#d6d3d1]{% endif %}" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                            </svg>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="text-[#525252] text-sm">{{ review.created_at|date:"M d, Y" }}</span>
+                            </div>
+                            <p class="text-[#525252]">{{ review.comment }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Sidebar - Booking Card -->
+            <div class="lg:col-span-1">
+                <div id="booking-section" class="bg-white rounded border-2 border-[#d6d3d1] p-8 sticky top-6 hover:border-[#FFCD00] transition-all shadow-sm hover:shadow-lg">
+                    {% if user_booking %}
+                    <div class="text-center py-12">
+                        <svg class="w-20 h-20 mx-auto text-[#7ccf00] mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <h3 class="text-3xl font-black text-[#525252] mb-4">You're Enrolled!</h3>
+                        <p class="text-[#525252] mb-6">Status: <span class="font-bold text-[#7ccf00]">{{ user_booking.status }}</span></p>
+                        <a href="{% url 'accounts:dashboard' %}" class="px-8 py-4 bg-[#7ccf00] text-white font-bold rounded hover:bg-[#00c950] transition-colors">
+                            View Dashboard
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="text-center mb-8">
+                        <p class="text-[#525252] text-lg mb-2">From</p>
+                        <p class="text-5xl font-black text-[#FFCD00]">KES {{ cls.price }}</p>
+                        <p class="text-[#525252] font-bold">per month</p>
+                    </div>
+
+                    <!-- Benefits -->
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-center gap-4 text-[#525252]">
+                            <svg class="w-6 h-6 text-[#7ccf00]" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>{% if cls.free_trials_available > 0 %}Free trial available{% else %}Professional instruction{% endif %}</span>
+                        </div>
+                        <div class="flex items-center gap-4 text-[#525252]">
+                            <svg class="w-6 h-6 text-[#7ccf00]" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>Equipment provided</span>
+                        </div>
+                        <div class="flex items-center gap-4 text-[#525252]">
+                            <svg class="w-6 h-6 text-[#7ccf00]" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>Flexible scheduling</span>
+                        </div>
+                        <div class="flex items-center gap-4 text-[#525252]">
+                            <svg class="w-6 h-6 text-[#7ccf00]" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>Progress tracking</span>
+                        </div>
+                    </div>
+
+                    {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'classes:book_class' cls.pk %}" class="space-y-6">
+                        {% csrf_token %}
+                        
+                        <div>
+                            <label class="block text-[#525252] font-bold mb-2">Select Schedule</label>
+                            <select name="schedule" required class="text-black w-full px-4 py-3 border-2 border-[#d6d3d1] rounded focus:border-[#FFCD00] focus:outline-none">
+                                <option value="">Choose a time slot...</option>
+                                {% for schedule in schedules %}
+                                <option value="{{ schedule.id }}">{{ schedule.day_of_week }} - {{ schedule.start_time|time:"g:i A" }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-[#525252] font-bold mb-2">Booking Type</label>
+                            <div class="space-y-3">
+                                {% for value, label in form.fields.booking_type.choices %}
+                                <label class="flex items-center gap-4 p-4 border-2 border-[#d6d3d1] rounded hover:border-[#FFCD00] cursor-pointer transition-all">
+                                    <input type="radio" name="booking_type" value="{{ value }}" class="w-5 h-5 text-[#FFCD00]" {% if forloop.first %}checked{% endif %}>
+                                    <span class=" text-black flex-1">{{ label }}</span>
+                                    {% if value == "Free Trial" %}
+                                    <span class="px-3 py-1 bg-[#7ccf00] text-white text-xs font-bold rounded">FREE</span>
+                                    {% endif %}
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[#525252] font-bold mb-2">M-Pesa Phone Number</label>
+                            <input type="text" name="phone_number" required placeholder="254712345678"
+                                   class="w-full px-4 py-3 border-2 border-[#d6d3d1] rounded focus:border-[#FFCD00] focus:outline-none">
+                            <p class="text-xs text-[#525252] mt-2">Format: 254712345678</p>
+                        </div>
+
+                        <button type="submit" class="w-full px-8 py-4 bg-[#FFCD00] text-black font-black text-xl rounded hover:bg-[#FBBF24] transition-colors">
+                            Book Now
+                        </button>
+                    </form>
+                    {% else %}
+                    <a href="{% url 'accounts:login' %}?next={{ request.path }}" 
+                       class="block w-full px-8 py-4 bg-[#FFCD00] text-black font-black text-xl rounded hover:bg-[#FBBF24] transition-colors text-center">
+                        Login to Book
+                    </a>
+                    {% endif %}
+                    {% endif %}
+
+                    <div class="mt-8 pt-8 border-t-2 border-[#d6d3d1] text-sm space-y-3">
+                        <div class="flex items-center gap-3 text-[#525252]">
+                            <svg class="w-5 h-5 text-[#7ccf00]" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>Secure M-Pesa payment</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-[#525252]">
+                            <svg class="w-5 h-5 text-[#7ccf00]" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>Instant confirmation</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-[#525252]">
+                            <svg class="w-5 h-5 text-[#7ccf00]" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/>
+                            </svg>
+                            <span>Money-back guarantee</span>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'classes:class_list' %}" class="block text-center text-[#525252] hover:text-[#FFCD00] transition-colors font-bold mt-8">
+                        ← Browse Other Classes
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

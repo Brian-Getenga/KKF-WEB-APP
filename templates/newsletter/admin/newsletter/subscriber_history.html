@@ -1,0 +1,183 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}Email History - {{ subscriber.email }}{% endblock %}
+
+{% block extrastyle %}
+<style>
+    .subscriber-info {
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+    }
+    .info-row {
+        display: flex;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .info-label {
+        font-weight: bold;
+        width: 200px;
+        color: #6c757d;
+    }
+    .info-value {
+        flex: 1;
+    }
+    .status-active {
+        background: #28a745;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 3px;
+        font-weight: bold;
+    }
+    .status-pending {
+        background: #ffc107;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 3px;
+        font-weight: bold;
+    }
+    .history-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+    }
+    .history-table th {
+        background: #f8f9fa;
+        padding: 12px;
+        text-align: left;
+        border-bottom: 2px solid #dee2e6;
+        font-weight: bold;
+    }
+    .history-table td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #dee2e6;
+    }
+    .history-table tr:hover {
+        background: #f8f9fa;
+    }
+    .success-badge {
+        background: #28a745;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 3px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    .failed-badge {
+        background: #dc3545;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 3px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 20px auto;">
+    <h1>📧 Email History for {{ subscriber.email }}</h1>
+    
+    <div class="subscriber-info">
+        <h2 style="margin-top: 0;">Subscriber Information</h2>
+        <div class="info-row">
+            <div class="info-label">Email:</div>
+            <div class="info-value">{{ subscriber.email }}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Name:</div>
+            <div class="info-value">{{ subscriber.name|default:"Not provided" }}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Status:</div>
+            <div class="info-value">
+                {% if subscriber.is_active %}
+                    <span class="status-active">✓ Active</span>
+                {% else %}
+                    <span class="status-pending">⏳ Pending</span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Preferences:</div>
+            <div class="info-value">{{ subscriber.get_preferences_display }}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Subscribed Date:</div>
+            <div class="info-value">{{ subscriber.subscribed_date|date:"Y-m-d H:i:s" }}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Confirmed Date:</div>
+            <div class="info-value">{{ subscriber.confirmed_date|date:"Y-m-d H:i:s"|default:"Not confirmed" }}</div>
+        </div>
+    </div>
+
+    <h2>Email Delivery History</h2>
+    
+    {% if logs %}
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Campaign</th>
+                    <th>Campaign Type</th>
+                    <th>Sent Date</th>
+                    <th>Status</th>
+                    <th>Error</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.id }}</td>
+                    <td>
+                        <a href="{% url 'admin:newsletter_campaign_change' log.campaign.id %}">
+                            {{ log.campaign.title }}
+                        </a>
+                    </td>
+                    <td>{{ log.campaign.get_campaign_type_display }}</td>
+                    <td>{{ log.sent_date|date:"Y-m-d H:i:s" }}</td>
+                    <td>
+                        {% if log.success %}
+                            <span class="success-badge">✓ Success</span>
+                        {% else %}
+                            <span class="failed-badge">✗ Failed</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if log.error_message %}
+                            <span style="color: #dc3545; font-family: monospace; font-size: 12px;">
+                                {{ log.error_message|truncatewords:8 }}
+                            </span>
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div style="background: #f8f9fa; padding: 30px; text-align: center; border-radius: 5px;">
+            <p style="color: #6c757d; margin: 0;">No email history found for this subscriber.</p>
+        </div>
+    {% endif %}
+
+    <div style="margin: 30px 0; text-align: center;">
+        <a href="{% url 'admin:newsletter_subscriber_changelist' %}" 
+           style="background-color: #007bff; color: white; padding: 10px 25px; 
+                  border-radius: 5px; text-decoration: none; display: inline-block; font-weight: bold;">
+            ← Back to Subscribers
+        </a>
+        <a href="{% url 'admin:newsletter_subscriber_change' subscriber.id %}" 
+           style="background-color: #28a745; color: white; padding: 10px 25px; 
+                  border-radius: 5px; text-decoration: none; display: inline-block; font-weight: bold; margin-left: 10px;">
+            ✏️ Edit Subscriber
+        </a>
+    </div>
+</div>
+{% endblock %}

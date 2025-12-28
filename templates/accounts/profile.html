@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+{% block title %}Profile | Kenya Karate Federation{% endblock %}
+
+{% block content %}
+
+<section class="relative h-48 bg-[#525252] flex items-center justify-center">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/20"></div>
+    
+    <div class="relative z-10 text-center px-6">
+        <h1 class="text-4xl font-bold text-white mb-2">
+            Edit <span class="text-[#FFCD00]">Profile</span>
+        </h1>
+        <p class="text-white/80">Keep your information up to date</p>
+    </div>
+</section>
+
+<section class="py-12 bg-[#f5f5f5] min-h-screen">
+    <div class="max-w-4xl mx-auto px-6">
+        
+        <!-- Profile Completion -->
+        <div class="mb-8 p-6 bg-white rounded border-2 border-[#d6d3d1]">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-[#525252] font-bold">Profile Completion</h3>
+                <span class="text-[#FFCD00] font-bold">{{ profile_completion }}%</span>
+            </div>
+            <div class="w-full bg-[#d6d3d1] rounded-full h-3">
+                <div class="bg-[#FFCD00] h-3 rounded-full transition-all" style="width: {{ profile_completion }}%"></div>
+            </div>
+        </div>
+
+        <div class="bg-white p-8 rounded border-2 border-[#d6d3d1]">
+            <form method="POST" enctype="multipart/form-data" class="space-y-8">
+                {% csrf_token %}
+                
+                <!-- Personal Information -->
+                <div>
+                    <h2 class="text-2xl font-bold text-[#525252] mb-6 pb-3 border-b-2 border-[#FFCD00]">
+                        Personal Information
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {% for field in form %}
+                            {% if field.name in 'phone,date_of_birth,gender,belt_level,years_of_experience' %}
+                            <div>
+                                <label for="{{ field.id_for_label }}" class="block text-[#525252] font-bold mb-2">
+                                    {{ field.label }}
+                                    {% if field.field.required %}<span class="text-[#fb2c36]">*</span>{% endif %}
+                                </label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                <p class="text-[#525252] text-sm mt-2">{{ field.help_text }}</p>
+                                {% endif %}
+                                {% if field.errors %}
+                                <div class="mt-2">
+                                    {% for error in field.errors %}
+                                    <p class="text-[#fb2c36] text-sm">{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Contact & Address -->
+                <div>
+                    <h2 class="text-2xl font-bold text-[#525252] mb-6 pb-3 border-b-2 border-[#7ccf00]">
+                        Contact & Address
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {% for field in form %}
+                            {% if field.name in 'address,city,country' %}
+                            <div>
+                                <label for="{{ field.id_for_label }}" class="block text-[#525252] font-bold mb-2">
+                                    {{ field.label }}
+                                    {% if field.field.required %}<span class="text-[#fb2c36]">*</span>{% endif %}
+                                </label>
+                                {{ field }}
+                                {% if field.errors %}
+                                <div class="mt-2">
+                                    {% for error in field.errors %}
+                                    <p class="text-[#fb2c36] text-sm">{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Emergency Contact -->
+                <div>
+                    <h2 class="text-2xl font-bold text-[#525252] mb-6 pb-3 border-b-2 border-[#fb2c36]">
+                        Emergency Contact
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {% for field in form %}
+                            {% if field.name in 'emergency_contact_name,emergency_contact_phone' %}
+                            <div>
+                                <label for="{{ field.id_for_label }}" class="block text-[#525252] font-bold mb-2">
+                                    {{ field.label }}
+                                    {% if field.field.required %}<span class="text-[#fb2c36]">*</span>{% endif %}
+                                </label>
+                                {{ field }}
+                                {% if field.errors %}
+                                <div class="mt-2">
+                                    {% for error in field.errors %}
+                                    <p class="text-[#fb2c36] text-sm">{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Training Preferences -->
+                <div>
+                    <h2 class="text-2xl font-bold text-[#525252] mb-6 pb-3 border-b-2 border-[#2b7fff]">
+                        Training Preferences
+                    </h2>
+                    <div class="space-y-6">
+                        {% for field in form %}
+                            {% if field.name in 'bio,preferred_training_time,training_goals' %}
+                            <div>
+                                <label for="{{ field.id_for_label }}" class="block text-[#525252] font-bold mb-2">
+                                    {{ field.label }}
+                                </label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                <p class="text-[#525252] text-sm mt-2">{{ field.help_text }}</p>
+                                {% endif %}
+                                {% if field.errors %}
+                                <div class="mt-2">
+                                    {% for error in field.errors %}
+                                    <p class="text-[#fb2c36] text-sm">{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Profile Picture -->
+                <div>
+                    <h2 class="text-2xl font-bold text-[#525252] mb-6 pb-3 border-b-2 border-[#FFCD00]">
+                        Profile Picture
+                    </h2>
+                    <div>
+                        <label for="{{ form.profile_picture.id_for_label }}" class="block text-[#525252] font-bold mb-2">
+                            {{ form.profile_picture.label }}
+                        </label>
+                        {{ form.profile_picture }}
+                        {% if form.profile_picture.errors %}
+                        <div class="mt-2">
+                            {% for error in form.profile_picture.errors %}
+                            <p class="text-[#fb2c36] text-sm">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Notifications -->
+                <div>
+                    <h2 class="text-2xl font-bold text-[#525252] mb-6 pb-3 border-b-2 border-[#7ccf00]">
+                        Notifications
+                    </h2>
+                    <div class="space-y-4">
+                        {% for field in form %}
+                            {% if field.name in 'email_notifications,sms_notifications' %}
+                            <div class="flex items-center gap-3">
+                                {{ field }}
+                                <label for="{{ field.id_for_label }}" class="text-[#525252] font-bold cursor-pointer">
+                                    {{ field.label }}
+                                </label>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 pt-6">
+                    <button type="submit" 
+                            class="flex-1 px-8 py-4 bg-[#FFCD00] text-black font-bold text-lg rounded hover:bg-[#FBBF24] transition-colors">
+                        Save Changes
+                    </button>
+                    
+                    <a href="{% url 'accounts:dashboard' %}" 
+                       class="flex-1 px-8 py-4 bg-white text-[#525252] font-bold text-center rounded border-2 border-[#d6d3d1] 
+                              hover:border-[#525252] transition-colors">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Help Cards -->
+        <div class="grid md:grid-cols-2 gap-6 mt-8">
+            <div class="bg-white p-6 rounded border-2 border-[#d6d3d1]">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-[#2b7fff] rounded flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-[#525252] font-bold mb-2">Profile Tips</h3>
+                        <p class="text-[#525252] text-sm">
+                            Complete your profile to unlock all features and receive personalized recommendations.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded border-2 border-[#d6d3d1]">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-[#7ccf00] rounded flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-[#525252] font-bold mb-2">Privacy & Security</h3>
+                        <p class="text-[#525252] text-sm">
+                            Your information is secure and will only be used for KKF communications and services.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

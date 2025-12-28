@@ -1,0 +1,76 @@
+<!-- ============================================================================ -->
+<!-- 6. newsletter/emails/order_confirmation.html -->
+<!-- ============================================================================ -->
+{% extends 'newsletter/emails/base_email.html' %}
+
+{% block title %}Order Confirmation{% endblock %}
+
+{% block header_title %}📦 Order Confirmed{% endblock %}
+
+{% block content %}
+<h2>Hi {{ user.get_full_name|default:user.username }}!</h2>
+
+<p>Thank you for your order! We've received it and will process it shortly.</p>
+
+<div class="info-box">
+    <strong>Order Number:</strong> {{ order.order_number }}<br>
+    <strong>Order Date:</strong> {{ order.created_at|date:"F d, Y g:i A" }}<br>
+    <strong>Status:</strong> {{ order.get_status_display }}<br>
+    <strong>Total Amount:</strong> ${{ order.total_amount }}
+</div>
+
+<h3>Shipping Information</h3>
+<p>
+    {{ order.shipping_full_name }}<br>
+    {{ order.shipping_address_line1 }}<br>
+    {% if order.shipping_address_line2 %}{{ order.shipping_address_line2 }}<br>{% endif %}
+    {{ order.shipping_city }}, {{ order.shipping_state }} {{ order.shipping_zip_code }}<br>
+    {{ order.shipping_country }}<br>
+    Phone: {{ order.shipping_phone }}<br>
+    Email: {{ order.shipping_email }}
+</p>
+
+<h3>Order Items</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>${{ item.price }}</td>
+            <td>${{ item.total_price }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3" style="text-align: right; font-weight: bold;">Subtotal:</td>
+            <td>${{ order.subtotal }}</td>
+        </tr>
+        <tr>
+            <td colspan="3" style="text-align: right; font-weight: bold;">Shipping:</td>
+            <td>${{ order.shipping_cost }}</td>
+        </tr>
+        <tr>
+            <td colspan="3" style="text-align: right; font-weight: bold;">Tax:</td>
+            <td>${{ order.tax_amount }}</td>
+        </tr>
+        <tr>
+            <td colspan="3" style="text-align: right; font-weight: bold; font-size: 18px;">Total:</td>
+            <td style="font-weight: bold; font-size: 18px;">${{ order.total_amount }}</td>
+        </tr>
+    </tfoot>
+</table>
+
+<a href="{{ site_url }}/orders/{{ order.order_number }}/" class="button">Track Your Order</a>
+
+<p>We'll send you another email once your order ships.</p>
+{% endblock %}

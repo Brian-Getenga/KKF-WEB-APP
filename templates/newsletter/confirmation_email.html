@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Your Subscription</title>
+    <style type="text/css">
+        /* Modern system font stack */
+        body, table, td, p, a, h1, h2 { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
+        
+        /* Reset and base styles */
+        body { margin: 0; padding: 0; background-color: #f0fdf4; } /* emerald-50 like */
+        img { border: 0; display: block; }
+        
+        /* Subtle shadow for card */
+        .card-shadow { box-shadow: 0 20px 40px rgba(16, 185, 129, 0.15); } /* emerald glow */
+    </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f0fdf4;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f0fdf4; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border-radius: 24px; overflow: hidden;" class="card-shadow">
+                    
+                    <!-- Modern Gradient Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 60px 40px; text-align: center; position: relative;">
+                            <!-- Animated-style circle icon (using background for compatibility) -->
+                            <div style="width: 120px; height: 120px; background-color: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border-radius: 50%; margin: 0 auto 30px; display: flex; align-items: center; justify-content: center; border: 4px solid rgba(255,255,255,0.3);">
+                                <span style="font-size: 60px;">✉️</span>
+                            </div>
+                            <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: 800; letter-spacing: -0.5px;">
+                                Confirm Your Subscription
+                            </h1>
+                            <p style="margin: 20px 0 0; color: rgba(255,255,255,0.9); font-size: 18px; line-height: 1.5;">
+                                One last step to join our community! 🎉
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Main Content -->
+                    <tr>
+                        <td style="padding: 50px 40px; text-align: center; background-color: #ffffff;">
+                            <p style="margin: 0 0 20px 0; color: #1f2937; font-size: 18px; line-height: 1.7;">
+                                Hi {{ subscriber.name|default:"there" }}! 👋
+                            </p>
+                            <p style="margin: 0 0 40px 0; color: #4b5563; font-size: 16px; line-height: 1.7;">
+                                Thank you for subscribing! We're thrilled to have you on board. Get ready for the latest news, exclusive classes, tips, and special offers straight to your inbox.
+                            </p>
+                            
+                            <!-- Details Card with modern glassmorphism touch -->
+                            <div style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border-left: 6px solid #10b981; border-radius: 16px; padding: 30px; margin: 40px 0; text-align: left; box-shadow: 0 4px 20px rgba(16,185,129,0.1);">
+                                <p style="margin: 0; color: #065f46; font-size: 15px; line-height: 1.8;">
+                                    <strong style="color: #047857;">📧 Your Email:</strong> {{ subscriber.email }}<br>
+                                    <strong style="color: #047857;">🔔 Preferences:</strong> {{ subscriber.get_preferences_display }}
+                                </p>
+                            </div>
+                            
+                            <p style="margin: 0 0 40px 0; color: #4b5563; font-size: 16px; line-height: 1.7;">
+                                Click the button below to confirm and activate your subscription:
+                            </p>
+                            
+                            <!-- Big, Cool CTA Button -->
+                            <div style="margin: 40px 0;">
+                                <a href="{{ confirmation_url }}" style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; padding: 18px 50px; text-decoration: none; border-radius: 9999px; font-weight: bold; font-size: 18px; box-shadow: 0 10px 30px rgba(16,185,129,0.4); transition: transform 0.2s;">
+                                    Confirm My Subscription
+                                </a>
+                            </div>
+                            
+                            <p style="margin: 40px 0 0 0; color: #6b7280; font-size: 14px; line-height: 1.6;">
+                                If the button doesn't work, copy and paste this link:<br>
+                                <a href="{{ confirmation_url }}" style="color: #10b981; word-break: break-all; text-decoration: underline;">{{ confirmation_url }}</a>
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f8fafc; padding: 40px; text-align: center; border-top: 1px solid #e2e8f0;">
+                            <p style="margin: 0 0 15px 0; color: #64748b; font-size: 14px; line-height: 1.6;">
+                                Not you? No worries—just ignore this email.
+                            </p>
+                            <p style="margin: 0; color: #94a3b8; font-size: 12px;">
+                                © 2025 Karate Dojo. All rights reserved.
+                            </p>
+                        </td>
+                    </tr>
+                    
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Shopping Cart | Kenya Karate Federation{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="relative h-[400px] bg-black flex items-center justify-center overflow-hidden">
+    <img src="{% static 'images/cart_hero.jpg' %}" alt="Karate Store" 
+         class="absolute w-full h-full object-cover opacity-30">
+    <div class="relative z-10 text-center px-6">
+        <div class="w-20 h-20 mx-auto mb-6 bg-[#FFCD00] rounded-2xl flex items-center justify-center">
+            <svg class="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-black text-white mb-3">
+            Shopping Cart
+        </h1>
+        <p class="text-gray-300">Review your items before checkout</p>
+    </div>
+</section>
+
+<section class="py-12 bg-gray-50 min-h-screen">
+    <div class="max-w-7xl mx-auto px-6">
+        {% if cart.items.all %}
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Cart Items -->
+            <div class="lg:col-span-2 space-y-4">
+                {% for item in cart.items.all %}
+                <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex gap-6">
+                        <!-- Product Image -->
+                        <a href="{% url 'store:product_detail' item.product.slug %}" class="flex-shrink-0">
+                            <div class="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden">
+                               {% if item.product.image %}
+    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}"
+         class="w-full h-full object-cover hover:scale-110 transition-transform duration-300">
+{% else %}
+    <img src="{% static 'images/default-product.jpg' %}" alt="No image available"
+         class="w-full h-full object-cover hover:scale-110 transition-transform duration-300">
+{% endif %}
+
+                                     class="w-full h-full object-cover hover:scale-110 transition-transform duration-300">
+                            </div>
+                        </a>
+                        
+                        <div class="flex-1">
+                            <a href="{% url 'store:product_detail' item.product.slug %}" 
+                               class="text-lg font-bold text-gray-900 hover:text-[#FFCD00] transition-colors mb-2 block">
+                                {{ item.product.name }}
+                            </a>
+                            
+                            <!-- Quantity Controls -->
+                            <div class="flex items-center gap-4 mb-3">
+                                <span class="text-gray-600 text-sm">Quantity:</span>
+                                <div class="flex items-center border-2 border-gray-200 rounded-lg overflow-hidden">
+                                    <button onclick="updateQuantity({{ item.id }}, {{ item.quantity }} - 1)" 
+                                            class="px-3 py-1.5 hover:bg-gray-50 text-gray-900 transition-colors">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
+                                    <span class="px-4 py-1.5 border-x-2 border-gray-200 font-semibold text-gray-900 min-w-[3rem] text-center">{{ item.quantity }}</span>
+                                    <button onclick="updateQuantity({{ item.id }}, {{ item.quantity }} + 1)" 
+                                            class="px-3 py-1.5 hover:bg-gray-50 text-gray-900 transition-colors">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <span class="text-gray-400">×</span>
+                                <span class="text-gray-900 font-semibold">KES {{ item.unit_price }}</span>
+                            </div>
+                            
+                            <div class="flex items-center justify-between">
+                                <span class="text-2xl font-black text-[#FFCD00]">KES {{ item.total_price }}</span>
+                                <form method="POST" action="{% url 'store:remove_from_cart' item.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" 
+                                            class="flex items-center gap-2 px-4 py-2 bg-white text-red-600 border-2 border-red-200 hover:bg-red-600 hover:text-white hover:border-red-600 rounded-lg transition-colors text-sm font-semibold">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                        </svg>
+                                        Remove
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <!-- Coupon Section -->
+                <div class="bg-white rounded-xl p-6 shadow-sm border-2 border-[#7ccf00]">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-[#7ccf00]" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5 5a3 3 0 015-2.236A3 3 0 0114.83 6H16a2 2 0 110 4h-5V9a1 1 0 10-2 0v1H4a2 2 0 110-4h1.17C5.06 5.687 5 5.35 5 5zm4 1V5a1 1 0 10-1 1h1zm3 0a1 1 0 10-1-1v1h1z" clip-rule="evenodd"/>
+                        </svg>
+                        Have a Coupon Code?
+                    </h3>
+                    {% if coupon %}
+                    <div class="flex items-center justify-between p-4 bg-green-50 border-2 border-green-500 rounded-lg mb-4">
+                        <div>
+                            <p class="font-bold text-green-800">Coupon Applied: {{ coupon.code }}</p>
+                            <p class="text-sm text-green-700">You're saving KES {{ discount_amount }}!</p>
+                        </div>
+                        <a href="{% url 'store:remove_coupon' %}" 
+                           class="px-4 py-2 bg-red-600 text-white font-semibold hover:bg-red-700 rounded-lg transition-colors text-sm">
+                            Remove
+                        </a>
+                    </div>
+                    {% else %}
+                    <form method="POST" action="{% url 'store:apply_coupon' %}" class="flex gap-3">
+                        {% csrf_token %}
+                        <input type="text" name="coupon_code" placeholder="Enter coupon code" 
+                               class="flex-1 px-4 py-3 border-2 border-gray-200 text-gray-900 placeholder-gray-400 rounded-lg focus:border-[#7ccf00] focus:outline-none transition-colors uppercase">
+                        <button type="submit" 
+                                class="px-6 py-3 bg-[#7ccf00] hover:bg-[#6bb800] text-white font-bold rounded-lg transition-colors whitespace-nowrap">
+                            Apply Coupon
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-xl p-8 shadow-sm sticky top-6">
+                    <h2 class="text-2xl font-black text-gray-900 mb-6 pb-4 border-b-2 border-[#FFCD00]">
+                        Order Summary
+                    </h2>
+                    
+                    <div class="space-y-4 mb-6 pb-6 border-b border-gray-200">
+                        <div class="flex justify-between text-gray-600">
+                            <span>Subtotal ({{ cart.total_items }} items)</span>
+                            <span class="font-semibold text-gray-900">KES {{ cart.total_price }}</span>
+                        </div>
+                        {% if discount_amount > 0 %}
+                        <div class="flex justify-between text-green-600">
+                            <span>Discount</span>
+                            <span class="font-semibold">-KES {{ discount_amount }}</span>
+                        </div>
+                        {% endif %}
+                        <div class="flex justify-between text-gray-600">
+                            <span>Shipping</span>
+                            <span class="font-semibold text-[#7ccf00]">Calculated at checkout</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center mb-8">
+                        <span class="text-xl font-bold text-gray-900">Total</span>
+                        <span class="text-3xl font-black text-[#FFCD00]">
+                            KES {{ final_total|default:cart.total_price }}
+                        </span>
+                    </div>
+                    
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'store:checkout' %}" 
+                       class="block w-full px-8 py-4 bg-[#FFCD00] hover:bg-[#e6b800] text-black font-black text-lg text-center rounded-lg transition-colors mb-4">
+                        Proceed to Checkout
+                    </a>
+                    {% else %}
+                    <a href="{% url 'accounts:login' %}?next={% url 'store:checkout' %}" 
+                       class="block w-full px-8 py-4 bg-[#FFCD00] hover:bg-[#e6b800] text-black font-black text-lg text-center rounded-lg transition-colors mb-4">
+                        Login to Checkout
+                    </a>
+                    {% endif %}
+                    
+                    <a href="{% url 'store:product_list' %}" 
+                       class="block text-center text-gray-600 hover:text-[#FFCD00] transition-colors font-semibold flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
+                        </svg>
+                        Continue Shopping
+                    </a>
+                    
+                    <!-- Security Badge -->
+                    <div class="mt-6 pt-6 border-t border-gray-200">
+                        <div class="flex items-center justify-center gap-2 text-gray-500 text-sm">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                            </svg>
+                            Secure Checkout
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <!-- Empty Cart -->
+        <div class="max-w-2xl mx-auto text-center py-20">
+            <div class="w-32 h-32 mx-auto mb-8 bg-gray-100 rounded-2xl flex items-center justify-center">
+                <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+            </div>
+            <h2 class="text-3xl font-black text-gray-900 mb-4">Your cart is empty</h2>
+            <p class="text-gray-600 mb-8 text-lg">Add some items to get started!</p>
+            <a href="{% url 'store:product_list' %}" 
+               class="inline-block px-8 py-4 bg-[#FFCD00] hover:bg-[#e6b800] text-black font-black text-lg rounded-lg transition-colors">
+                Browse Store
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<script>
+function updateQuantity(itemId, newQuantity) {
+    if (newQuantity < 1) return;
+    
+    const formData = new FormData();
+    formData.append('quantity', newQuantity);
+    
+    fetch(`/store/cart/update/${itemId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert(data.message);
+        }
+    });
+}
+</script>
+
+{% endblock %}

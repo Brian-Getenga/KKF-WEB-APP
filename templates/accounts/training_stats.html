@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+{% block title %}Training Stats | Kenya Karate Federation{% endblock %}
+
+{% block content %}
+
+<section class="relative h-48 bg-[#525252] flex items-center justify-center">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/20"></div>
+    
+    <div class="relative z-10 text-center px-6">
+        <h1 class="text-4xl font-bold text-white mb-2">
+            Training <span class="text-[#FFCD00]">Statistics</span>
+        </h1>
+        <p class="text-white/80">Track your progress and achievements</p>
+    </div>
+</section>
+
+<section class="py-12 bg-[#f5f5f5] min-h-screen">
+    <div class="max-w-6xl mx-auto px-6">
+        
+        <!-- Overview Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded border-2 border-[#d6d3d1]">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="w-12 h-12 bg-[#FFCD00] rounded flex items-center justify-center">
+                        <svg class="w-6 h-6 text-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"/>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-[#525252] text-sm mb-1">Total Classes</p>
+                <p class="text-4xl font-bold text-[#525252]">{{ stats.total_classes_attended }}</p>
+                <p class="text-[#7ccf00] text-sm mt-2 font-bold">+3 this month</p>
+            </div>
+
+            <div class="bg-white p-6 rounded border-2 border-[#d6d3d1]">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="w-12 h-12 bg-[#7ccf00] rounded flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-[#525252] text-sm mb-1">Training Hours</p>
+                <p class="text-4xl font-bold text-[#525252]">{{ stats.total_training_hours|floatformat:0 }}</p>
+                <p class="text-[#2b7fff] text-sm mt-2 font-bold">{{ stats.total_training_hours|floatformat:1 }} hours total</p>
+            </div>
+
+            <div class="bg-white p-6 rounded border-2 border-[#d6d3d1]">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="w-12 h-12 bg-[#2b7fff] rounded flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-[#525252] text-sm mb-1">Current Streak</p>
+                <p class="text-4xl font-bold text-[#525252]">{{ stats.current_streak_days }}</p>
+                <p class="text-[#525252] text-sm mt-2 font-bold">days in a row</p>
+            </div>
+
+            <div class="bg-white p-6 rounded border-2 border-[#d6d3d1]">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="w-12 h-12 bg-[#fb2c36] rounded flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-[#525252] text-sm mb-1">Best Streak</p>
+                <p class="text-4xl font-bold text-[#525252]">{{ stats.longest_streak_days }}</p>
+                <p class="text-[#525252] text-sm mt-2 font-bold">days record</p>
+            </div>
+        </div>
+
+        <!-- Progress Details -->
+        <div class="grid lg:grid-cols-2 gap-8">
+            
+            <!-- Streak Information -->
+            <div class="bg-white p-8 rounded border-2 border-[#d6d3d1]">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-[#FFCD00] rounded flex items-center justify-center">
+                        <svg class="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-[#525252]">Streak Progress</h2>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-[#525252] font-bold">Current Streak</span>
+                            <span class="text-[#2b7fff] font-bold">{{ stats.current_streak_days }} / {{ stats.longest_streak_days }} days</span>
+                        </div>
+                        <div class="w-full bg-[#d6d3d1] rounded-full h-3">
+                            <div class="bg-[#2b7fff] h-3 rounded-full" style="width: {% if stats.longest_streak_days > 0 %}{{ stats.current_streak_days|floatformat:0|add:"0"|divisibleby:stats.longest_streak_days|yesno:"100,0" }}{% else %}0{% endif %}%"></div>
+                        </div>
+                    </div>
+
+                    {% if stats.last_training_date %}
+                    <div class="p-4 bg-[#f5f5f5] rounded border border-[#d6d3d1]">
+                        <p class="text-[#525252] text-sm mb-1">Last Training Session</p>
+                        <p class="text-xl font-bold text-[#525252]">{{ stats.last_training_date|date:"F j, Y" }}</p>
+                    </div>
+                    {% endif %}
+
+                    <div class="p-4 bg-[#f5f5f5] rounded border border-[#d6d3d1]">
+                        <p class="text-[#525252] text-sm mb-3">Keep your streak going! Train today to maintain your progress.</p>
+                        <a href="{% url 'classes:class_list' %}" 
+                           class="inline-block px-6 py-2 bg-[#FFCD00] text-black font-bold rounded hover:bg-[#FBBF24]">
+                            Book a Class
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tournament Stats -->
+            <div class="bg-white p-8 rounded border-2 border-[#d6d3d1]">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-[#7ccf00] rounded flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-[#525252]">Tournaments</h2>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-center p-6 bg-[#f5f5f5] rounded">
+                            <p class="text-[#525252] text-sm mb-2">Participated</p>
+                            <p class="text-4xl font-bold text-[#2b7fff]">{{ stats.tournaments_participated }}</p>
+                        </div>
+                        <div class="text-center p-6 bg-[#f5f5f5] rounded">
+                            <p class="text-[#525252] text-sm mb-2">Victories</p>
+                            <p class="text-4xl font-bold text-[#7ccf00]">{{ stats.tournaments_won }}</p>
+                        </div>
+                    </div>
+
+                    {% if stats.tournaments_participated > 0 %}
+                    <div class="p-4 bg-[#f5f5f5] rounded border border-[#d6d3d1]">
+                        <p class="text-[#525252] text-sm mb-2">Win Rate</p>
+                        <div class="flex items-center gap-4">
+                            <div class="flex-1">
+                                <div class="w-full bg-[#d6d3d1] rounded-full h-3">
+                                    <div class="bg-[#7ccf00] h-3 rounded-full" style="width: {% widthratio stats.tournaments_won stats.tournaments_participated 100 %}%"></div>
+                                </div>
+                            </div>
+                            <span class="text-2xl font-bold text-[#7ccf00]">{% widthratio stats.tournaments_won stats.tournaments_participated 100 %}%</span>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-8">
+                        <svg class="w-16 h-16 text-[#d6d3d1] mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
+                        </svg>
+                        <p class="text-[#525252] mb-4">No tournament participation yet</p>
+                        <p class="text-[#525252] text-sm">Join tournaments to test your skills!</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievements -->
+        <div class="mt-8 bg-white p-8 rounded border-2 border-[#d6d3d1]">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 bg-[#2b7fff] rounded flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-[#525252]">Recent Achievements</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="p-6 bg-[#f5f5f5] rounded border border-[#d6d3d1] text-center">
+                    <div class="w-16 h-16 bg-[#FFCD00] rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-8 h-8 text-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-[#525252] mb-1">Week Warrior</h3>
+                    <p class="text-[#525252] text-sm">7-day training streak</p>
+                </div>
+
+                <div class="p-6 bg-[#f5f5f5] rounded border border-[#d6d3d1] text-center">
+                    <div class="w-16 h-16 bg-[#7ccf00] rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-[#525252] mb-1">Class Regular</h3>
+                    <p class="text-[#525252] text-sm">10+ classes attended</p>
+                </div>
+
+                <div class="p-6 bg-[#f5f5f5] rounded border border-[#d6d3d1] text-center">
+                    <div class="w-16 h-16 bg-[#2b7fff] rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-[#525252] mb-1">Dedicated Student</h3>
+                    <p class="text-[#525252] text-sm">50+ training hours</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="mt-8">
+            <a href="{% url 'accounts:dashboard' %}" 
+               class="inline-flex items-center gap-2 px-6 py-3 bg-white text-[#525252] font-bold rounded border-2 border-[#d6d3d1] 
+                      hover:border-[#525252] transition-colors">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
+                </svg>
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

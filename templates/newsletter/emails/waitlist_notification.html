@@ -1,0 +1,36 @@
+
+<!-- ============================================================================ -->
+<!-- 4. newsletter/emails/waitlist_notification.html -->
+<!-- ============================================================================ -->
+{% extends 'newsletter/emails/base_email.html' %}
+
+{% block title %}Waiting List Confirmation{% endblock %}
+
+{% block header_title %}⏳ You're on the Waiting List{% endblock %}
+
+{% block content %}
+<h2>Hi {{ user.get_full_name|default:user.username }}!</h2>
+
+<p>You've been successfully added to the waiting list.</p>
+
+<div class="info-box">
+    <strong>Class:</strong> {{ karate_class.title }}<br>
+    <strong>Preferred Date:</strong> {{ schedule.date|date:"F d, Y" }}<br>
+    <strong>Time:</strong> {{ schedule.start_time }} - {{ schedule.end_time }}<br>
+    <strong>Current Capacity:</strong> Full
+</div>
+
+<p>We'll notify you immediately if a spot becomes available. You'll have <strong>24 hours</strong> to confirm your booking once notified.</p>
+
+<h3>What Happens Next?</h3>
+<ul>
+    <li>We'll monitor for cancellations and availability</li>
+    <li>You'll receive an email if a spot opens up</li>
+    <li>You can view your waitlist status anytime</li>
+</ul>
+
+<a href="{{ site_url }}/classes/{{ karate_class.slug }}/" class="button">View Class Details</a>
+
+<p>Thank you for your patience and interest in our classes!</p>
+{% endblock %}
+

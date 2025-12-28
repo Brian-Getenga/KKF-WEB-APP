@@ -1,0 +1,212 @@
+
+<!-- ========================================================================== -->
+<!-- PAYMENT PENDING PAGE -->
+<!-- ========================================================================== -->
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Payment Pending | Kenya Karate Federation{% endblock %}
+
+{% block content %}
+
+<section class="min-h-screen flex items-center justify-center bg-gray-50 py-16 px-6">
+    <div class="max-w-2xl w-full">
+        <!-- Pending Icon -->
+        <div class="text-center mb-8">
+            <div class="w-24 h-24 mx-auto mb-6 bg-yellow-400 rounded-2xl flex items-center justify-center">
+                <svg class="w-12 h-12 text-white animate-spin" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+            
+            <h1 class="text-4xl md:text-5xl font-black mb-4 text-gray-900">
+                <span class="text-[#FFCD00]">Payment Pending</span>
+            </h1>
+            <p class="text-gray-600 text-lg mb-2">Order #<span class="text-[#FFCD00] font-semibold">{{ order.order_number }}</span></p>
+        </div>
+
+        <!-- Instructions Card -->
+        <div class="bg-white rounded-2xl p-8 md:p-12 shadow-sm mb-6">
+            {% if order.payment_method == 'mpesa' %}
+            <div class="mb-8">
+                <div class="flex items-center gap-3 mb-6 pb-4 border-b-2 border-[#FFCD00]">
+                    <div class="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-xs">M-PESA</span>
+                    </div>
+                    <h2 class="text-2xl font-black text-gray-900">Complete M-Pesa Payment</h2>
+                </div>
+                
+                <div class="space-y-4 mb-6">
+                    <div class="bg-blue-50 border-2 border-blue-200 rounded-xl p-6">
+                        <div class="flex items-start gap-4">
+                            <div class="w-8 h-8 bg-[#2b7fff] rounded-lg flex items-center justify-center flex-shrink-0">
+                                <span class="text-white font-bold">1</span>
+                            </div>
+                            <div>
+                                <p class="text-gray-900 font-semibold mb-1">Check Your Phone</p>
+                                <p class="text-gray-700 text-sm">An M-Pesa payment request has been sent to <strong>{{ order.mpesa_phone_number }}</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-blue-50 border-2 border-blue-200 rounded-xl p-6">
+                        <div class="flex items-start gap-4">
+                            <div class="w-8 h-8 bg-[#2b7fff] rounded-lg flex items-center justify-center flex-shrink-0">
+                                <span class="text-white font-bold">2</span>
+                            </div>
+                            <div>
+                                <p class="text-gray-900 font-semibold mb-1">Enter Your M-Pesa PIN</p>
+                                <p class="text-gray-700 text-sm">Complete the payment on your phone by entering your M-Pesa PIN</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-blue-50 border-2 border-blue-200 rounded-xl p-6">
+                        <div class="flex items-start gap-4">
+                            <div class="w-8 h-8 bg-[#7ccf00] rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-gray-900 font-semibold mb-1">Wait for Confirmation</p>
+                                <p class="text-gray-700 text-sm">This page will automatically update once payment is received</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Payment Status -->
+            <div id="payment-status" class="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6 mb-6">
+                <div class="flex items-center justify-center gap-3">
+                    <svg class="w-6 h-6 text-yellow-600 animate-spin" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    <p class="text-yellow-800 font-semibold">Waiting for payment confirmation...</p>
+                </div>
+                <p class="text-center text-yellow-600 text-sm mt-2">This may take a few seconds</p>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="mb-6">
+                <h3 class="text-gray-900 font-bold mb-4 pb-3 border-b border-gray-200">Order Summary</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between text-gray-600">
+                        <span>Amount</span>
+                        <span class="font-bold text-gray-900">KES {{ order.total_price }}</span>
+                    </div>
+                    <div class="flex justify-between text-gray-600">
+                        <span>Payment Method</span>
+                        <span class="font-semibold text-gray-900">{{ order.get_payment_method_display }}</span>
+                    </div>
+                    <div class="flex justify-between text-gray-600">
+                        <span>Order Status</span>
+                        <span class="font-semibold text-gray-900">{{ order.get_status_display }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Important Notes -->
+            <div class="bg-red-50 border-2 border-red-200 rounded-xl p-6">
+                <h4 class="text-gray-900 font-bold mb-3 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                    </svg>
+                    Important Notes
+                </h4>
+                <ul class="space-y-2 text-gray-700 text-sm">
+                    <li class="flex items-start gap-2">
+                        <span class="w-2 h-2 bg-red-600 rounded-full mt-1.5 flex-shrink-0"></span>
+                        <span>Don't close this page or refresh until payment is confirmed</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="w-2 h-2 bg-red-600 rounded-full mt-1.5 flex-shrink-0"></span>
+                        <span>If you don't receive the STK push, check if your phone is on and has network</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="w-2 h-2 bg-red-600 rounded-full mt-1.5 flex-shrink-0"></span>
+                        <span>Payment request expires in 5 minutes</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4">
+            <a href="{% url 'store:order_detail' order.pk %}" 
+               class="flex-1 px-8 py-4 bg-[#2b7fff] hover:bg-[#1e5dcc] text-white font-black text-center rounded-lg transition-colors">
+                View Order
+            </a>
+            <form method="POST" action="{% url 'store:cancel_order' order.pk %}" class="flex-1">
+                {% csrf_token %}
+                <button type="submit" 
+                        class="w-full px-8 py-4 bg-gray-600 hover:bg-gray-700 text-white font-black rounded-lg transition-colors"
+                        onclick="return confirm('Are you sure you want to cancel this order?')">
+                    Cancel Order
+                </button>
+            </form>
+        </div>
+
+        <!-- Support -->
+        <div class="text-center mt-8">
+            <p class="text-gray-600 text-sm mb-2">Having trouble with payment?</p>
+            <a href="{% url 'core:contact' %}" class="text-[#2b7fff] hover:underline font-semibold">Contact Support</a>
+        </div>
+    </div>
+</section>
+
+<script>
+// Auto-check payment status every 3 seconds
+let checkCount = 0;
+const maxChecks = 100; // 5 minutes (100 * 3 seconds)
+
+function checkPaymentStatus() {
+    if (checkCount >= maxChecks) {
+        document.getElementById('payment-status').innerHTML = `
+            <div class="text-center">
+                <svg class="w-12 h-12 text-red-600 mx-auto mb-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                </svg>
+                <p class="text-red-600 font-semibold">Payment timed out</p>
+                <a href="{% url 'store:retry_payment' order.pk %}" class="text-blue-600 hover:underline mt-2 inline-block">Retry Payment</a>
+            </div>
+        `;
+        return;
+    }
+    
+    fetch('{% url "store:check_payment_status" order.pk %}')
+        .then(response => response.json())
+        .then(data => {
+            checkCount++;
+            
+            if (data.paid) {
+                window.location.href = '{% url "store:order_confirmation" order.pk %}';
+            } else if (data.status === 'failed') {
+                document.getElementById('payment-status').innerHTML = `
+                    <div class="text-center">
+                        <svg class="w-12 h-12 text-red-600 mx-auto mb-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                        </svg>
+                        <p class="text-red-600 font-semibold mb-3">Payment failed</p>
+                        <a href="{% url 'store:retry_payment' order.pk %}" class="px-6 py-3 bg-[#2b7fff] hover:bg-[#1e5dcc] text-white font-bold rounded-lg inline-block">
+                            Retry Payment
+                        </a>
+                    </div>
+                `;
+            } else {
+                setTimeout(checkPaymentStatus, 3000);
+            }
+        })
+        .catch(error => {
+            console.error('Error checking payment status:', error);
+            setTimeout(checkPaymentStatus, 3000);
+        });
+}
+
+// Start checking after 2 seconds
+setTimeout(checkPaymentStatus, 2000);
+</script>
+
+{% endblock %}

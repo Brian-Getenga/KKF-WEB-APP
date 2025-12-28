@@ -1,0 +1,400 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Instructors | Kenya Karate Federation{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section with Parallax Effect -->
+<section class="relative h-[28rem] bg-black flex items-center justify-center overflow-hidden">
+     <img src="{% static 'images/instrutor-hero.jpg' %}" alt="Schedule" 
+         class="absolute w-full h-full object-cover opacity-30">
+    
+    <div class="absolute inset-0 bg-black opacity-40"></div>
+    
+    <div class="relative z-10 text-center px-6 max-w-4xl mx-auto">
+        <div class="mb-6">
+            <span class="inline-block px-4 py-2 bg-[#FFCD00] text-black font-bold text-sm animate-pulse">
+                MEET OUR TEAM
+            </span>
+        </div>
+        <h1 class="text-5xl md:text-6xl lg:text-7xl font-black text-white mb-4 leading-tight">
+            Our <span class="text-[#FFCD00]">Instructors</span>
+        </h1>
+        <p class="text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto">
+            World-class masters dedicated to your martial arts journey
+        </p>
+    </div>
+</section>
+
+<!-- Stats Bar with Animations -->
+<section class="bg-white border-b-2 border-gray-200 shadow-md">
+    <div class="max-w-7xl mx-auto px-6 py-10">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div class="group">
+                <div class="text-4xl md:text-5xl font-black text-[#FFCD00] mb-2 group-hover:scale-110 transition-transform">
+                    {{ total_instructors }}
+                </div>
+                <div class="text-sm md:text-base text-gray-600 font-medium">Expert Instructors</div>
+            </div>
+            <div class="group">
+                <div class="text-4xl md:text-5xl font-black text-[#7ccf00] mb-2 group-hover:scale-110 transition-transform">
+                    {{ available_instructors }}
+                </div>
+                <div class="text-sm md:text-base text-gray-600 font-medium">Currently Available</div>
+            </div>
+            <div class="group">
+                <div class="text-4xl md:text-5xl font-black text-[#2b7fff] mb-2 group-hover:scale-110 transition-transform">
+                    200+
+                </div>
+                <div class="text-sm md:text-base text-gray-600 font-medium">Years Combined Experience</div>
+            </div>
+            <div class="group">
+                <div class="text-4xl md:text-5xl font-black text-[#FFCD00] mb-2 group-hover:scale-110 transition-transform">
+                    100%
+                </div>
+                <div class="text-sm md:text-base text-gray-600 font-medium">Certified Black Belts</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Enhanced Filter & Search Bar -->
+<section class="bg-gray-50 border-b-2 border-gray-200 sticky top-0 z-40 shadow-md">
+    <div class="max-w-7xl mx-auto px-6 py-6">
+        <form method="get" class="space-y-4" id="filterForm">
+            <!-- Search Bar with Icon -->
+            <div class="flex gap-3">
+                <div class="flex-1 relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                    <input type="text" 
+                           name="search" 
+                           value="{{ current_filters.search }}"
+                           placeholder="Search instructors by name, bio, or specialization..."
+                           class="text-black w-full pl-12 pr-4 py-4 border-2 border-gray-300 focus:border-[#FFCD00] focus:outline-none focus:ring-2 focus:ring-[#FFCD00] focus:ring-opacity-50 transition-all">
+                </div>
+                <button type="submit" 
+                        class="px-10 py-4 bg-[#FFCD00] text-black font-bold hover:bg-[#e6b800] transition-all hover:shadow-lg transform hover:-translate-y-0.5">
+                    Search
+                </button>
+            </div>
+
+            <!-- Filters Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div class="relative">
+                    <select name="rank" 
+                            class="text-black w-full px-4 py-4 border-2 border-gray-300 focus:border-[#FFCD00] focus:outline-none focus:ring-2 focus:ring-[#FFCD00] focus:ring-opacity-50 appearance-none bg-white transition-all"
+                            onchange="this.form.submit()">
+                        <option value="">All Ranks</option>
+                        {% for value, label in rank_choices %}
+                            <option value="{{ value }}" {% if current_filters.rank == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <select name="specialization"
+                            class="text-black w-full px-4 py-4 border-2 border-gray-300 focus:border-[#FFCD00] focus:outline-none focus:ring-2 focus:ring-[#FFCD00] focus:ring-opacity-50 appearance-none bg-white transition-all"
+                            onchange="this.form.submit()">
+                        <option value="">All Specializations</option>
+                        {% for value, label in specialization_choices %}
+                            <option value="{{ value }}" {% if current_filters.specialization == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <select name="sort"
+                            class="text-black w-full px-4 py-4 border-2 border-gray-300 focus:border-[#FFCD00] focus:outline-none focus:ring-2 focus:ring-[#FFCD00] focus:ring-opacity-50 appearance-none bg-white transition-all"
+                            onchange="this.form.submit()">
+                        <option value="default" {% if current_filters.sort == 'default' %}selected{% endif %}>Featured First</option>
+                        <option value="name" {% if current_filters.sort == 'name' %}selected{% endif %}>Name (A-Z)</option>
+                        <option value="experience" {% if current_filters.sort == 'experience' %}selected{% endif %}>Most Experienced</option>
+                        <option value="rating" {% if current_filters.sort == 'rating' %}selected{% endif %}>Highest Rated</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <label class="flex items-center gap-3 px-4 py-4 bg-white border-2 border-gray-300 cursor-pointer hover:border-[#7ccf00] transition-all">
+                    <input type="checkbox" 
+                           name="available" 
+                           value="1"
+                           {% if current_filters.available %}checked{% endif %}
+                           onchange="this.form.submit()"
+                           class="text-black w-5 h-5 text-[#7ccf00] border-gray-300 rounded focus:ring-[#7ccf00]">
+                    <span class="text-gray-700 font-medium flex items-center gap-2">
+                        <svg class="w-5 h-5 text-[#7ccf00]" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        Available Only
+                    </span>
+                </label>
+            </div>
+
+            <!-- Active Filters Display -->
+            {% if current_filters.search or current_filters.rank or current_filters.specialization or current_filters.available %}
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+                <span class="text-sm text-gray-600 font-medium">Active Filters:</span>
+                
+                {% if current_filters.search %}
+                <span class="inline-flex items-center gap-2 px-3 py-1 bg-white border border-gray-300 text-sm">
+                    Search: "{{ current_filters.search }}"
+                </span>
+                {% endif %}
+                
+                {% if current_filters.rank %}
+                <span class="inline-flex items-center gap-2 px-3 py-1 bg-white border border-gray-300 text-sm">
+                    Rank: {{ current_filters.rank }}
+                </span>
+                {% endif %}
+                
+                {% if current_filters.specialization %}
+                <span class="inline-flex items-center gap-2 px-3 py-1 bg-white border border-gray-300 text-sm">
+                    Specialization: {{ current_filters.specialization }}
+                </span>
+                {% endif %}
+                
+                {% if current_filters.available %}
+                <span class="inline-flex items-center gap-2 px-3 py-1 bg-[#7ccf00] text-white text-sm font-medium">
+                    Available Only
+                </span>
+                {% endif %}
+                
+                <a href="{% url 'core:instructor_list' %}" 
+                   class="inline-flex items-center gap-2 px-4 py-1 bg-gray-700 text-white text-sm font-medium hover:bg-gray-800 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                    Clear All
+                </a>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+</section>
+
+<!-- Instructors Grid -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+        {% if instructors %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for instructor in instructors %}
+                <div class="group bg-white border-2 border-gray-200 hover:border-[#FFCD00] transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2 overflow-hidden">
+                    <!-- Image Container -->
+                    <div class="relative h-80 bg-gray-100 overflow-hidden">
+                        {% if instructor.photo %}
+                        <img src="{{ instructor.photo.url }}" 
+                             alt="{{ instructor.name }}" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        {% else %}
+                        <div class="w-full h-full flex items-center justify-center bg-gray-200">
+                            <svg class="w-24 h-24 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Overlay Badges -->
+                        <div class="absolute top-4 left-4 flex flex-col gap-2">
+                            {% if instructor.is_featured %}
+                            <span class="px-3 py-1 bg-[#FFCD00] text-black text-xs font-bold shadow-lg">
+                                ⭐ FEATURED
+                            </span>
+                            {% endif %}
+                            {% if instructor.is_available %}
+                            <span class="px-3 py-1 bg-[#7ccf00] text-white text-xs font-bold shadow-lg">
+                                ✓ AVAILABLE
+                            </span>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Rating Badge -->
+                        {% if instructor.avg_rating %}
+                        <div class="absolute top-4 right-4 bg-white px-3 py-2 shadow-lg">
+                            <div class="flex items-center gap-1">
+                                <svg class="w-5 h-5 text-[#FFCD00]" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                </svg>
+                                <span class="font-bold text-gray-900">{{ instructor.avg_rating|floatformat:1 }}</span>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="p-6">
+                        <h3 class="text-2xl font-black text-black mb-2 group-hover:text-[#FFCD00] transition-colors">
+                            {{ instructor.name }}
+                        </h3>
+                        
+                        <p class="text-[#2b7fff] font-bold mb-3 flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            {{ instructor.get_rank_display }}
+                        </p>
+                        
+                        {% if instructor.bio %}
+                        <p class="text-gray-600 mb-4 line-clamp-3 leading-relaxed">
+                            {{ instructor.bio|truncatewords:25 }}
+                        </p>
+                        {% endif %}
+                        
+                        <!-- Stats Grid -->
+                        <div class="grid grid-cols-3 gap-3 mb-4 pt-4 border-t border-gray-200">
+                            <div class="text-center">
+                                <div class="text-xl font-bold text-[#FFCD00]">{{ instructor.experience_years }}+</div>
+                                <div class="text-xs text-gray-600">Years</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-xl font-bold text-[#7ccf00]">{{ instructor.achievement_count }}</div>
+                                <div class="text-xs text-gray-600">Awards</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-xl font-bold text-[#2b7fff]">{{ instructor.testimonial_count }}</div>
+                                <div class="text-xs text-gray-600">Reviews</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Specialization Tag -->
+                        {% if instructor.specialization %}
+                        <div class="mb-4">
+                            <span class="inline-block px-3 py-1 bg-gray-100 text-gray-700 text-sm font-medium">
+                                {{ instructor.get_specialization_display }}
+                            </span>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- CTA Button -->
+                        <a href="{% url 'core:instructor_detail' instructor.slug %}" 
+                           class="block w-full px-6 py-3 bg-[#FFCD00] text-black text-center font-bold hover:bg-[#e6b800] transition-colors group-hover:shadow-lg">
+                            View Profile
+                            <svg class="inline-block w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if is_paginated %}
+            <div class="mt-12 flex justify-center">
+                <nav class="flex items-center gap-2">
+                    {% if page_obj.has_previous %}
+                    <a href="?page=1{% for key, value in current_filters.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                       class="px-4 py-2 border-2 border-gray-300 text-gray-700 hover:border-[#FFCD00] hover:text-[#FFCD00] transition-colors">
+                        First
+                    </a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% for key, value in current_filters.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                       class="px-4 py-2 border-2 border-gray-300 text-gray-700 hover:border-[#FFCD00] hover:text-[#FFCD00] transition-colors">
+                        Previous
+                    </a>
+                    {% endif %}
+                    
+                    <span class="px-6 py-2 bg-[#FFCD00] text-black font-bold">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </span>
+                    
+                    {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% for key, value in current_filters.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                       class="px-4 py-2 border-2 border-gray-300 text-gray-700 hover:border-[#FFCD00] hover:text-[#FFCD00] transition-colors">
+                        Next
+                    </a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% for key, value in current_filters.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                       class="px-4 py-2 border-2 border-gray-300 text-gray-700 hover:border-[#FFCD00] hover:text-[#FFCD00] transition-colors">
+                        Last
+                    </a>
+                    {% endif %}
+                </nav>
+            </div>
+            {% endif %}
+            
+        {% else %}
+            <!-- Empty State -->
+            <div class="text-center py-20">
+                <svg class="w-24 h-24 text-gray-300 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <h3 class="text-2xl font-bold text-gray-700 mb-2">No Instructors Found</h3>
+                <p class="text-gray-500 mb-6">Try adjusting your filters or search terms</p>
+                <a href="{% url 'core:instructor_list' %}" 
+                   class="inline-block px-8 py-3 bg-[#FFCD00] text-black font-bold hover:bg-[#e6b800] transition-colors">
+                    Clear Filters
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 bg-gradient-to-br from-black to-gray-900 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute inset-0" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,205,0,0.1) 10px, rgba(255,205,0,0.1) 20px);"></div>
+    </div>
+    
+    <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+        <h2 class="text-4xl md:text-5xl font-black text-white mb-4">
+            Ready to Train with the <span class="text-[#FFCD00]">Best?</span>
+        </h2>
+        <p class="text-gray-300 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
+            Start your karate journey with our expert instructors today and unlock your full potential
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{% url 'classes:class_list' %}" 
+               class="px-10 py-4 bg-[#FFCD00] text-black font-bold hover:bg-[#e6b800] transition-all hover:shadow-2xl transform hover:-translate-y-1">
+                Browse Classes
+            </a>
+            <a href="{% url 'core:contact' %}" 
+               class="px-10 py-4 bg-white border-2 border-white text-gray-900 font-bold hover:bg-transparent hover:text-white transition-all">
+                Contact Us
+            </a>
+        </div>
+    </div>
+</section>
+
+<style>
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.grid > div {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.grid > div:nth-child(1) { animation-delay: 0.1s; }
+.grid > div:nth-child(2) { animation-delay: 0.2s; }
+.grid > div:nth-child(3) { animation-delay: 0.3s; }
+</style>
+
+{% endblock %}

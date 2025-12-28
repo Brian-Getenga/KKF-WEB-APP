@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Sign Up | Kenya Karate Federation{% endblock %}
+
+{% block content %}
+<section class="min-h-screen flex items-center justify-center bg-[#525252] px-6 py-16">
+  <div class="max-w-lg w-full bg-white rounded border-2 border-[#d6d3d1] p-8 md:p-10">
+    
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <div class="w-16 h-16 bg-[#FFCD00] rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-black" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"/>
+        </svg>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-bold text-[#525252] mb-2">Join the Dojo</h1>
+      <p class="text-[#525252]">Create your KKF account and start your journey</p>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="mb-6">
+      {% for message in messages %}
+      <div class="p-4 rounded border-2 {% if message.tags == 'error' %}bg-red-50 border-[#fb2c36] text-[#fb2c36]{% elif message.tags == 'success' %}bg-green-50 border-[#7ccf00] text-[#7ccf00]{% else %}bg-blue-50 border-[#2b7fff] text-[#2b7fff]{% endif %}">
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Info Banner -->
+    <div class="mb-6 p-4 bg-blue-50 border-2 border-[#2b7fff] rounded">
+      <div class="flex items-start gap-3">
+        <svg class="w-5 h-5 text-[#2b7fff] mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+        </svg>
+        <div>
+          <p class="text-[#2b7fff] text-sm font-bold">Email Verification Required</p>
+          <p class="text-[#2b7fff] text-sm">After completing this form, we'll send a verification code to your email.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signup Form -->
+    <form method="post" class="space-y-5">
+      {% csrf_token %}
+      
+      <!-- Non-field errors -->
+      {% if form.non_field_errors %}
+      <div class="p-4 bg-red-50 border-2 border-[#fb2c36] rounded">
+        {% for error in form.non_field_errors %}
+        <p class="text-[#fb2c36] text-sm">{{ error }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Name Fields -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="{{ form.first_name.id_for_label }}" class="block text-[#525252] font-bold mb-2">
+            First Name <span class="text-[#fb2c36]">*</span>
+          </label>
+          {{ form.first_name }}
+          {% if form.first_name.errors %}
+            {% for error in form.first_name.errors %}
+            <p class="text-[#fb2c36] text-sm mt-1">{{ error }}</p>
+            {% endfor %}
+          {% endif %}
+        </div>
+        
+        <div>
+          <label for="{{ form.last_name.id_for_label }}" class="block text-[#525252] font-bold mb-2">
+            Last Name <span class="text-[#fb2c36]">*</span>
+          </label>
+          {{ form.last_name }}
+          {% if form.last_name.errors %}
+            {% for error in form.last_name.errors %}
+            <p class="text-[#fb2c36] text-sm mt-1">{{ error }}</p>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Email Field -->
+      <div>
+        <label for="{{ form.email.id_for_label }}" class="block text-[#525252] font-bold mb-2">
+          Email Address <span class="text-[#fb2c36]">*</span>
+        </label>
+        {{ form.email }}
+        {% if form.email.errors %}
+          {% for error in form.email.errors %}
+          <p class="text-[#fb2c36] text-sm mt-1">{{ error }}</p>
+          {% endfor %}
+        {% endif %}
+        {% if form.email.help_text %}
+        <p class="text-[#525252] text-xs mt-1">{{ form.email.help_text }}</p>
+        {% endif %}
+      </div>
+
+      <!-- Password Fields -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="{{ form.password1.id_for_label }}" class="block text-[#525252] font-bold mb-2">
+            Password <span class="text-[#fb2c36]">*</span>
+          </label>
+          {{ form.password1 }}
+          {% if form.password1.errors %}
+            {% for error in form.password1.errors %}
+            <p class="text-[#fb2c36] text-sm mt-1">{{ error }}</p>
+            {% endfor %}
+          {% endif %}
+        </div>
+        
+        <div>
+          <label for="{{ form.password2.id_for_label }}" class="block text-[#525252] font-bold mb-2">
+            Confirm Password <span class="text-[#fb2c36]">*</span>
+          </label>
+          {{ form.password2 }}
+          {% if form.password2.errors %}
+            {% for error in form.password2.errors %}
+            <p class="text-[#fb2c36] text-sm mt-1">{{ error }}</p>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Password Requirements -->
+      <div class="p-4 bg-[#f5f5f5] rounded border border-[#d6d3d1]">
+        <p class="text-[#525252] text-sm font-bold mb-2">Password Requirements:</p>
+        <ul class="text-[#525252] text-sm space-y-1">
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-[#7ccf00]" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            At least 8 characters long
+          </li>
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-[#7ccf00]" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            Contains letters and numbers
+          </li>
+        </ul>
+      </div>
+
+      <!-- Terms Checkbox -->
+      <div class="flex items-start gap-3">
+        {{ form.agree_terms }}
+        <label for="{{ form.agree_terms.id_for_label }}" class="text-[#525252] text-sm">
+          I agree to the <a href="#" class="text-[#2b7fff] hover:underline">Terms of Service</a> and 
+          <a href="#" class="text-[#2b7fff] hover:underline">Privacy Policy</a>
+          <span class="text-[#fb2c36]">*</span>
+        </label>
+      </div>
+      {% if form.agree_terms.errors %}
+        {% for error in form.agree_terms.errors %}
+        <p class="text-[#fb2c36] text-sm">{{ error }}</p>
+        {% endfor %}
+      {% endif %}
+
+      <!-- Submit Button -->
+      <button 
+        type="submit"
+        class="w-full py-4 bg-[#FFCD00] text-black font-bold text-lg rounded hover:bg-[#FBBF24] transition-colors flex items-center justify-center gap-2">
+        Continue to Verification
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+        </svg>
+      </button>
+    </form>
+
+    <!-- Login Link -->
+    <div class="mt-6 pt-6 border-t-2 border-[#d6d3d1] text-center">
+      <p class="text-[#525252]">
+        Already have an account?
+        <a href="{% url 'accounts:login' %}" class="text-[#FFCD00] font-bold hover:text-[#FBBF24] transition-colors">
+          Log In
+        </a>
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,35 @@
+<!-- ============================================================================ -->
+<!-- newsletter/templates/newsletter/inline_form.html - COMPLETE VERSION -->
+<!-- This is for inline forms on pages -->
+<!-- ============================================================================ -->
+
+{% load static %}
+
+<div class="newsletter-inline-widget p-4" style="background: linear-gradient(135deg, #FFCD00 0%, #FFB800 100%); border-radius: 10px;">
+    <div class="row align-items-center">
+        <div class="col-lg-6 mb-3 mb-lg-0">
+            <h3 style="color: #000; font-weight: bold; margin-bottom: 10px;">📬 Join Our Newsletter</h3>
+            <p style="color: #333; margin: 0; font-size: 14px;">
+                Stay updated with the latest classes, blog posts, and exclusive offers!
+            </p>
+        </div>
+        <div class="col-lg-6">
+            <form method="post" action="{% url 'newsletter:subscribe' %}" class="newsletter-inline-form">
+                {% csrf_token %}
+                <div class="input-group">
+                    <input type="email" 
+                           name="email" 
+                           class="form-control" 
+                           placeholder="Enter your email" 
+                           required
+                           style="border: 2px solid #fff; font-size: 14px;">
+                    <button class="btn" type="submit" style="background: #000; color: #FFCD00; font-weight: bold; border: none; padding: 0 25px;">
+                        Subscribe
+                    </button>
+                </div>
+                <input type="hidden" name="preferences" value="all">
+                <input type="text" name="website" style="display:none;" tabindex="-1" autocomplete="off">
+            </form>
+        </div>
+    </div>
+</div>

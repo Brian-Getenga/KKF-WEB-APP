@@ -1,0 +1,57 @@
+
+<!-- ============================================================================ -->
+<!-- 13. newsletter/emails/welcome_subscriber.html -->
+<!-- ============================================================================ -->
+{% extends 'newsletter/emails/base_email.html' %}
+
+{% block title %}Welcome to Our Newsletter{% endblock %}
+
+{% block header_title %}🎉 Welcome!{% endblock %}
+
+{% block content %}
+<h2>Hi {{ subscriber.first_name|default:"there" }}!</h2>
+
+<p>Welcome to the Karate Academy newsletter! We're thrilled to have you join our community.</p>
+
+<div class="info-box">
+    <strong>Email:</strong> {{ subscriber.email }}<br>
+    <strong>Subscribed:</strong> {{ subscriber.created_at|date:"F d, Y" }}<br>
+    <strong>Subscription Type:</strong> {{ subscriber.get_subscription_type_display }}
+</div>
+
+<h3>What You'll Receive</h3>
+<ul>
+    <li>🥋 Updates on new classes and training programs</li>
+    <li>📝 Latest blog posts and martial arts tips</li>
+    <li>🛍️ Exclusive promotions and new product announcements</li>
+    <li>📸 Gallery highlights and event photos</li>
+    <li>🎯 Special member-only offers</li>
+</ul>
+
+<p style="background-color: #e7f3ff; color: #004085; padding: 15px; border-radius: 5px; border-left: 4px solid #0066cc;">
+    💡 Tip: Add us to your contacts to ensure our emails reach your inbox!
+</p>
+
+<h3>Stay Connected</h3>
+<p>Follow us on social media for daily updates and behind-the-scenes content!</p>
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="#" style="margin: 0 10px; color: #667eea; text-decoration: none;">Facebook</a> |
+    <a href="#" style="margin: 0 10px; color: #667eea; text-decoration: none;">Instagram</a> |
+    <a href="#" style="margin: 0 10px; color: #667eea; text-decoration: none;">Twitter</a>
+</div>
+
+<a href="{{ site_url }}" class="button">Visit Our Website</a>
+
+<hr class="divider">
+
+<p style="font-size: 14px; color: #666;">
+    You're receiving this email because you subscribed to our newsletter. 
+    You can update your preferences or unsubscribe at any time.
+</p>
+
+<p style="text-align: center;">
+    <a href="{{ unsubscribe_url }}" style="color: #999; font-size: 12px;">Unsubscribe</a>
+</p>
+{% endblock %}
+{% block footer %}{% endblock %}

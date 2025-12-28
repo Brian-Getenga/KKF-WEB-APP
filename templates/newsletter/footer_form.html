@@ -1,0 +1,53 @@
+<!-- ============================================================================ -->
+<!-- newsletter/templates/newsletter/footer_form.html - COMPLETE VERSION -->
+<!-- This is the form snippet to include in your footer -->
+<!-- ============================================================================ -->
+
+{% load static %}
+
+<div class="newsletter-footer-widget">
+    <h4 style="color: #FFCD00; margin-bottom: 15px; font-weight: bold;">📬 Stay Updated</h4>
+    <p style="color: #d6d3d1; font-size: 14px; margin-bottom: 20px;">
+        Get the latest news, classes, and exclusive offers delivered to your inbox.
+    </p>
+    
+    <form method="post" action="{% url 'newsletter:subscribe' %}" class="newsletter-footer-form">
+        {% csrf_token %}
+        <div class="input-group mb-2">
+            <input type="email" 
+                   name="email" 
+                   class="form-control" 
+                   placeholder="Your email address" 
+                   required
+                   style="background-color: rgba(255,255,255,0.1); border: 1px solid #d6d3d1; color: #fff;">
+            <button class="btn" type="submit" style="background: #FFCD00; color: #000; font-weight: bold; border: none;">
+                Subscribe
+            </button>
+        </div>
+        <input type="hidden" name="preferences" value="all">
+        <input type="text" name="website" style="display:none;" tabindex="-1" autocomplete="off">
+        <small style="color: #d6d3d1; font-size: 12px;">
+            We respect your privacy. Unsubscribe anytime.
+        </small>
+    </form>
+</div>
+
+<style>
+.newsletter-footer-form .form-control:focus {
+    background-color: rgba(255,255,255,0.15);
+    border-color: #FFCD00;
+    color: #fff;
+    box-shadow: 0 0 0 0.2rem rgba(255, 205, 0, 0.25);
+}
+
+.newsletter-footer-form .form-control::placeholder {
+    color: #d6d3d1;
+    opacity: 0.7;
+}
+
+.newsletter-footer-form .btn:hover {
+    background: #FFB800;
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+</style>

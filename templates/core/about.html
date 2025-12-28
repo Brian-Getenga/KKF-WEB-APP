@@ -1,0 +1,277 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}About Us | Kenya Karate Federation{% endblock %}
+
+{% block content %}
+
+<!-- Hero Banner -->
+<section class="relative h-[500px] bg-black flex items-center justify-center overflow-hidden">
+    <div class="absolute inset-0">
+        <img src="{% static 'images/about-hero.jpg' %}" alt="Dojo Interior" 
+             class="w-full h-full object-cover opacity-30">
+    </div>
+    
+    <div class="relative z-10 text-center px-6 max-w-4xl mx-auto">
+        <div class="inline-block px-6 py-2 bg-[#FFCD00] mb-6">
+            <span class="text-black font-bold text-sm uppercase tracking-wider">Est. 1995</span>
+        </div>
+        <h1 class="text-5xl md:text-7xl font-black text-white mb-6 leading-tight">
+            About <span class="text-[#FFCD00]">Kenya Karate Federation</span>
+        </h1>
+        <p class="text-xl text-gray-300 max-w-2xl mx-auto">
+            Building champions, fostering discipline, and uniting Kenya through the art of karate
+        </p>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-16 bg-white border-b-2 border-gray-200">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div class="text-center border-2 border-gray-200 p-8 hover:border-[#FFCD00] transition-colors">
+                <div class="text-6xl font-black text-[#FFCD00] mb-2">30+</div>
+                <div class="text-gray-600 font-semibold">Years of Excellence</div>
+            </div>
+            <div class="text-center border-2 border-gray-200 p-8 hover:border-[#7ccf00] transition-colors">
+                <div class="text-6xl font-black text-[#7ccf00] mb-2">{{ org_stats.total_students|default:"5,000+" }}</div>
+                <div class="text-gray-600 font-semibold">Active Members</div>
+            </div>
+            <div class="text-center border-2 border-gray-200 p-8 hover:border-[#FFCD00] transition-colors">
+                <div class="text-6xl font-black text-[#FFCD00] mb-2">{{ org_stats.dojos|default:"50+" }}</div>
+                <div class="text-gray-600 font-semibold">Dojos Nationwide</div>
+            </div>
+            <div class="text-center border-2 border-gray-200 p-8 hover:border-[#7ccf00] transition-colors">
+                <div class="text-6xl font-black text-[#7ccf00] mb-2">{{ org_stats.medals|default:"200+" }}</div>
+                <div class="text-gray-600 font-semibold">International Medals</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Mission, Vision & Values -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- Mission -->
+            <div class="bg-white p-8 border-2 border-gray-200 hover:border-[#FFCD00] transition-colors">
+                <div class="w-16 h-16 bg-[#FFCD00] flex items-center justify-center mb-6">
+                    <svg class="w-8 h-8 text-black" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"/>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-black text-black mb-4">Our Mission</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    To promote and develop karate as a sport and martial art throughout Kenya, fostering discipline, respect, and excellence in every practitioner.
+                </p>
+            </div>
+
+            <!-- Vision -->
+            <div class="bg-white p-8 border-2 border-gray-200 hover:border-[#7ccf00] transition-colors">
+                <div class="w-16 h-16 bg-[#7ccf00] flex items-center justify-center mb-6">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-black text-black mb-4">Our Vision</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    To be the leading martial arts organization in Africa, producing world-class athletes and contributing to national development through sport.
+                </p>
+            </div>
+
+            <!-- Values -->
+            <div class="bg-white p-8 border-2 border-gray-200 hover:border-[#2b7fff] transition-colors">
+                <div class="w-16 h-16 bg-[#2b7fff] flex items-center justify-center mb-6">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-black text-black mb-4">Our Values</h3>
+                <ul class="text-gray-600 space-y-2">
+                    <li class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-[#2b7fff]"></span>
+                        Discipline & Respect
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-[#2b7fff]"></span>
+                        Excellence & Integrity
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-[#2b7fff]"></span>
+                        Community & Unity
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-[#2b7fff]"></span>
+                        Continuous Improvement
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- History & Philosophy -->
+<section class="py-20 bg-white">
+    <div class="max-w-5xl mx-auto px-6">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-black mb-6">
+                <span class="text-[#FFCD00]">Our Story</span>
+            </h2>
+            <div class="w-24 h-1 bg-[#FFCD00] mx-auto"></div>
+        </div>
+
+        <div class="space-y-8 text-gray-700 text-lg leading-relaxed border-l-4 border-[#FFCD00] pl-8">
+            <p class="text-xl text-black font-semibold">
+                Founded in 1995, the Kenya Karate Federation has grown from a small group of dedicated practitioners to become the official governing body for karate in Kenya.
+            </p>
+            
+            <p>
+                Our journey began with a vision to bring traditional Japanese karate to Kenya while respecting our rich cultural heritage. Over the past three decades, we have trained thousands of students, from beginners taking their first steps on the mat to Olympic-level athletes representing Kenya on the world stage.
+            </p>
+
+            <p>
+                As an affiliate of the World Karate Federation (WKF) and a proud member of the Olympic Council of Kenya (NOCK), we uphold the highest standards in martial arts education. Our instructors are certified black belts with international credentials, ensuring that every student receives authentic, world-class training.
+            </p>
+
+            <p>
+                Beyond competition and physical training, we emphasize the philosophical aspects of karate - discipline, respect, perseverance, and the continuous pursuit of self-improvement. These values extend beyond the dojo, shaping our students into confident, respectful members of society.
+            </p>
+
+            <p class="text-[#FFCD00] font-semibold italic border-l-4 border-[#7ccf00] pl-6 ml-4">
+                "Karate is not about winning or losing, but about the perfection of character." - Gichin Funakoshi
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Instructor Team -->
+{% if instructors %}
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-black mb-6">
+                <span class="text-[#7ccf00]">Master Instructors</span>
+            </h2>
+            <p class="text-gray-600 text-lg">Train under certified black belt masters with decades of experience</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {% for instructor in instructors %}
+            <a href="{% url 'core:instructor_detail' instructor.slug %}"
+               class="group bg-white border-2 border-gray-200 hover:border-[#7ccf00] transition-colors overflow-hidden">
+                <div class="relative h-64 bg-gray-100 overflow-hidden">
+                    {% if instructor.photo %}
+                    <img src="{{ instructor.photo.url }}" alt="{{ instructor.name }}" 
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    {% else %}
+                    <div class="w-full h-full flex items-center justify-center bg-gray-200">
+                        <svg class="w-20 h-20 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    {% endif %}
+                    <div class="absolute top-4 right-4">
+                        <span class="px-3 py-1 bg-[#FFCD00] text-black font-bold text-xs">
+                            {{ instructor.get_rank_display|truncatewords:2 }}
+                        </span>
+                    </div>
+                    {% if instructor.achievement_count %}
+                    <div class="absolute bottom-4 left-4 right-4 bg-black/80 p-2 text-white text-xs">
+                        {{ instructor.achievement_count }} Achievement{{ instructor.achievement_count|pluralize }}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="p-6 text-center">
+                    <h3 class="text-black text-xl font-bold mb-2 group-hover:text-[#7ccf00] transition-colors">
+                        {{ instructor.name }}
+                    </h3>
+                    <p class="text-gray-600 text-sm mb-4">{{ instructor.experience_years }}+ years experience</p>
+                    
+                    {% if instructor.social_links %}
+                    <div class="flex justify-center space-x-2">
+                        <a href="{{ instructor.social_links }}" target="_blank" rel="noopener noreferrer"
+                           class="w-8 h-8 bg-gray-100 border-2 border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gradient-to-br hover:from-purple-500 hover:to-pink-500 hover:text-white hover:border-pink-600 transition-colors">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-12">
+            <a href="{% url 'core:instructor_list' %}" 
+               class="inline-block px-8 py-4 bg-[#7ccf00] text-white font-bold hover:bg-[#6bb800] transition-colors">
+                View All Instructors
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Affiliations & Partners -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-black mb-6">
+                <span class="text-[#2b7fff]">Affiliations & Partners</span>
+            </h2>
+            <p class="text-gray-600 text-lg">Proud members of international and national sports bodies</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div class="bg-white p-8 border-2 border-gray-200 hover:border-[#FFCD00] transition-colors flex items-center justify-center text-center">
+                <div>
+                    <div class="text-4xl font-black text-[#FFCD00] mb-2">WKF</div>
+                    <div class="text-gray-600 text-sm">World Karate Federation</div>
+                </div>
+            </div>
+            <div class="bg-white p-8 border-2 border-gray-200 hover:border-[#7ccf00] transition-colors flex items-center justify-center text-center">
+                <div>
+                    <div class="text-4xl font-black text-[#7ccf00] mb-2">NOCK</div>
+                    <div class="text-gray-600 text-sm">Olympic Council Kenya</div>
+                </div>
+            </div>
+            <div class="bg-white p-8 border-2 border-gray-200 hover:border-[#2b7fff] transition-colors flex items-center justify-center text-center">
+                <div>
+                    <div class="text-4xl font-black text-[#2b7fff] mb-2">UFAK</div>
+                    <div class="text-gray-600 text-sm">Union of African Karate</div>
+                </div>
+            </div>
+            <div class="bg-white p-8 border-2 border-gray-200 hover:border-[#FFCD00] transition-colors flex items-center justify-center text-center">
+                <div>
+                    <div class="text-4xl font-black text-[#FFCD00] mb-2">MOK</div>
+                    <div class="text-gray-600 text-sm">Ministry of Sports</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-24 bg-[#f5f5f4]">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+        <h2 class="text-4xl md:text-5xl font-black text-black mb-6">
+            Join the KKF Family
+        </h2>
+        <p class="text-black text-lg mb-10">
+            Become part of Kenya's premier karate organization and start your martial arts journey today
+        </p>
+        <div class="flex flex-col sm:flex-row gap-6 justify-center">
+            <a href="{% url 'accounts:signup' %}" 
+               class="px-10 py-5 bg-[#FFCD00] text-black font-black text-xl hover:bg-[#e6b800] transition-colors">
+                Become a Member
+            </a>
+            <a href="{% url 'core:contact' %}" 
+               class="px-10 py-5 bg-transparent border-2 border-[#FFCD00] text-[#FFCD00] font-bold text-xl hover:bg-[#FFCD00] hover:text-black transition-colors">
+                Contact Us
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,288 @@
+<!-- SCHEDULE PAGE -->
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Class Schedule | Kenya Karate Federation{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="relative h-[400px] bg-[#525252] flex items-center justify-center overflow-hidden">
+    <img src="{% static 'images/schedule-hero.jpg' %}" alt="Schedule" 
+         class="absolute w-full h-full object-cover opacity-30">
+    <div class="absolute inset-0 bg-black/40"></div>
+    
+    <div class="relative z-10 text-center px-6">
+        <div class="mb-4">
+            <svg class="w-20 h-20 mx-auto text-[#FFCD00]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+        </div>
+        <h1 class="text-5xl md:text-7xl font-black text-white mb-6">
+            Weekly <span class="text-[#FFCD00]">Schedule</span>
+        </h1>
+        <div class="w-24 h-1 bg-[#FFCD00] mx-auto mb-6"></div>
+        <p class="text-xl text-[#d6d3d1] max-w-2xl mx-auto">
+            Find the perfect class time that fits your schedule
+        </p>
+    </div>
+</section>
+
+<!-- Filter Options -->
+<section class="sticky top-20 z-40 bg-white border-b-2 border-[#d6d3d1] py-4 shadow-sm">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="flex items-center justify-between">
+            <p class="text-[#525252] font-semibold">
+                <span class="text-[#FFCD00] text-2xl font-black">{{ total_classes }}</span> classes this week
+            </p>
+            <div class="flex gap-3">
+                <button onclick="filterByDay('all')" class="day-filter active px-4 py-2 bg-[#FFCD00] text-black font-bold rounded hover:bg-[#FBBF24] transition-colors text-sm">
+                    All Days
+                </button>
+                <button onclick="filterByDay('today')" class="day-filter px-4 py-2 border-2 border-[#d6d3d1] text-[#525252] font-bold rounded hover:border-[#FFCD00] transition-colors text-sm">
+                    Today
+                </button>
+                <button onclick="filterByDay('weekend')" class="day-filter px-4 py-2 border-2 border-[#d6d3d1] text-[#525252] font-bold rounded hover:border-[#FFCD00] transition-colors text-sm">
+                    Weekend
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Schedule by Day -->
+<section class="py-16 bg-[#f5f5f5]">
+    <div class="max-w-7xl mx-auto px-6">
+        {% if schedules_by_day %}
+            {% for day, day_schedules in schedules_by_day.items %}
+            <div class="day-section mb-8" data-day="{{ day }}">
+                <!-- Day Header -->
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-[#FFCD00] rounded-lg flex items-center justify-center">
+                            <svg class="w-8 h-8 text-black" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h2 class="text-3xl font-black text-[#525252]">{{ day }}</h2>
+                        <p class="text-[#525252]">{{ day_schedules|length }} class{{ day_schedules|length|pluralize:"es" }} scheduled</p>
+                    </div>
+                </div>
+
+                <!-- Classes for this day -->
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {% for schedule in day_schedules %}
+                    <div class="bg-white rounded border-2 border-[#d6d3d1] hover:border-[#FFCD00] transition-all overflow-hidden">
+                        <!-- Time Badge -->
+                        <div class="bg-[#525252] px-6 py-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2 text-white">
+                                    <svg class="w-5 h-5 text-[#FFCD00]" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span class="font-bold text-lg">{{ schedule.start_time|time:"g:i A" }}</span>
+                                </div>
+                                <span class="text-[#d6d3d1] text-sm">{{ schedule.duration_minutes }} min</span>
+                            </div>
+                            <p class="text-[#d6d3d1] text-xs mt-1">Until {{ schedule.end_time|time:"g:i A" }}</p>
+                        </div>
+
+                        <!-- Class Info -->
+                        <div class="p-6">
+                            <div class="flex items-start justify-between mb-3">
+                                <h3 class="text-xl font-bold text-[#525252] flex-1">
+                                    {{ schedule.karate_class.title }}
+                                </h3>
+                                <span class="px-3 py-1 bg-white border-2 border-[#7ccf00] rounded text-[#7ccf00] text-xs font-semibold ml-2 whitespace-nowrap">
+                                    {{ schedule.karate_class.level }}
+                                </span>
+                            </div>
+
+                            <!-- Details -->
+                            <div class="space-y-2 mb-4">
+                                <div class="flex items-center gap-2 text-sm text-[#525252]">
+                                    <svg class="w-4 h-4 text-[#FFCD00]" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>{{ schedule.karate_class.instructor.name }}</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm text-[#525252]">
+                                    <svg class="w-4 h-4 text-[#2b7fff]" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>{{ schedule.location }}</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm text-[#525252]">
+                                    <svg class="w-4 h-4 text-[#7ccf00]" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                                    </svg>
+                                    <span>{{ schedule.karate_class.category }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Availability -->
+                            {% if schedule.karate_class.spots_available > 0 %}
+                            <div class="flex items-center gap-2 mb-4 p-3 bg-[#7ccf00]/10 rounded border border-[#7ccf00]">
+                                <svg class="w-4 h-4 text-[#7ccf00]" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                <span class="text-[#7ccf00] text-sm font-semibold">
+                                    {{ schedule.karate_class.spots_available }} spot{{ schedule.karate_class.spots_available|pluralize }} available
+                                </span>
+                            </div>
+                            {% else %}
+                            <div class="flex items-center gap-2 mb-4 p-3 bg-[#fb2c36]/10 rounded border border-[#fb2c36]">
+                                <svg class="w-4 h-4 text-[#fb2c36]" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                </svg>
+                                <span class="text-[#fb2c36] text-sm font-semibold">Class Full</span>
+                            </div>
+                            {% endif %}
+
+                            <!-- CTA Buttons -->
+                            <div class="space-y-2">
+                                <a href="{% url 'classes:class_detail' schedule.karate_class.slug %}" 
+                                   class="block w-full text-center px-4 py-3 bg-[#FFCD00] text-black font-bold rounded hover:bg-[#FBBF24] transition-colors">
+                                    View Details
+                                </a>
+                                {% if user.is_authenticated %}
+                                    {% if schedule.karate_class.spots_available > 0 %}
+                                    <a href="{% url 'classes:book_class' schedule.karate_class.pk %}" 
+                                       class="block w-full text-center px-4 py-2 border-2 border-[#7ccf00] text-[#7ccf00] font-semibold rounded hover:bg-[#7ccf00] hover:text-white transition-colors text-sm">
+                                        Book Now
+                                    </a>
+                                    {% else %}
+                                    <button class="w-full px-4 py-2 border-2 border-[#d6d3d1] text-[#525252] font-semibold rounded text-sm cursor-not-allowed" disabled>
+                                        Fully Booked
+                                    </button>
+                                    {% endif %}
+                                {% else %}
+                                <a href="{% url 'accounts:login' %}?next={{ request.path }}" 
+                                   class="block w-full text-center px-4 py-2 border-2 border-[#7ccf00] text-[#7ccf00] font-semibold rounded hover:bg-[#7ccf00] hover:text-white transition-colors text-sm">
+                                    Login to Book
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <!-- Empty State -->
+        <div class="text-center py-20 bg-white rounded border-2 border-[#d6d3d1]">
+            <div class="w-32 h-32 mx-auto mb-8 bg-[#f5f5f5] rounded-full flex items-center justify-center">
+                <svg class="w-16 h-16 text-[#d6d3d1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+            </div>
+            <h2 class="text-3xl font-black text-[#525252] mb-4">No classes scheduled</h2>
+            <p class="text-[#525252] mb-8">Check back soon for our updated schedule!</p>
+            <a href="{% url 'core:contact' %}" 
+               class="inline-block px-8 py-4 bg-[#FFCD00] text-black font-black rounded hover:bg-[#FBBF24] transition-colors">
+                Contact Us
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Info Cards -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-black text-[#525252] mb-4">Class Information</h2>
+            <div class="w-24 h-1 bg-[#FFCD00] mx-auto"></div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-[#f5f5f5] p-8 rounded border-2 border-[#d6d3d1] hover:border-[#FFCD00] transition-colors text-center">
+                <div class="w-16 h-16 bg-[#FFCD00] rounded flex items-center justify-center mb-6 mx-auto">
+                    <svg class="w-8 h-8 text-black" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-[#525252] mb-3">Flexible Times</h3>
+                <p class="text-[#525252]">Morning, afternoon, and evening classes available throughout the week</p>
+            </div>
+
+            <div class="bg-[#f5f5f5] p-8 rounded border-2 border-[#d6d3d1] hover:border-[#7ccf00] transition-colors text-center">
+                <div class="w-16 h-16 bg-[#7ccf00] rounded flex items-center justify-center mb-6 mx-auto">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-[#525252] mb-3">All Ages Welcome</h3>
+                <p class="text-[#525252]">Specialized classes for kids, teens, and adults at all skill levels</p>
+            </div>
+
+            <div class="bg-[#f5f5f5] p-8 rounded border-2 border-[#d6d3d1] hover:border-[#2b7fff] transition-colors text-center">
+                <div class="w-16 h-16 bg-[#2b7fff] rounded flex items-center justify-center mb-6 mx-auto">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-[#525252] mb-3">Expert Training</h3>
+                <p class="text-[#525252]">Certified black belt instructors with international experience</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 bg-[#525252]">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+        <h2 class="text-4xl md:text-5xl font-black text-white mb-6">
+            Ready to Start Training?
+        </h2>
+        <div class="w-24 h-1 bg-[#FFCD00] mx-auto mb-6"></div>
+        <p class="text-[#d6d3d1] text-lg mb-10">
+            Book your first class today and experience the KKF difference
+        </p>
+        <div class="flex flex-col sm:flex-row gap-6 justify-center">
+            <a href="{% if user.is_authenticated %}{% url 'classes:class_list' %}{% else %}{% url 'accounts:signup' %}{% endif %}" 
+               class="px-10 py-5 bg-[#FFCD00] text-black font-black text-xl rounded uppercase tracking-wider hover:bg-[#FBBF24] transition-colors">
+               {% if user.is_authenticated %}Browse Classes{% else %}Sign Up Now{% endif %}
+            </a>
+            <a href="{% url 'core:contact' %}" 
+               class="px-10 py-5 border-2 border-white text-white font-bold text-xl rounded hover:bg-white hover:text-black transition-colors">
+                Contact Us
+            </a>
+        </div>
+    </div>
+</section>
+
+<script>
+// Filter by day functionality
+function filterByDay(filter) {
+    const sections = document.querySelectorAll('.day-section');
+    const buttons = document.querySelectorAll('.day-filter');
+    const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+    const weekend = ['Saturday', 'Sunday'];
+    
+    // Update active button
+    buttons.forEach(btn => {
+        btn.classList.remove('active', 'bg-[#FFCD00]', 'text-black');
+        btn.classList.add('border-2', 'border-[#d6d3d1]', 'text-[#525252]');
+    });
+    event.target.classList.add('active', 'bg-[#FFCD00]', 'text-black');
+    event.target.classList.remove('border-2', 'border-[#d6d3d1]', 'text-[#525252]');
+    
+    // Filter sections
+    sections.forEach(section => {
+        const day = section.dataset.day;
+        
+        if (filter === 'all') {
+            section.style.display = 'block';
+        } else if (filter === 'today') {
+            section.style.display = day === today ? 'block' : 'none';
+        } else if (filter === 'weekend') {
+            section.style.display = weekend.includes(day) ? 'block' : 'none';
+        }
+    });
+}
+</script>
+
+{% endblock %}

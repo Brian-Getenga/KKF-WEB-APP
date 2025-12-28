@@ -1,0 +1,36 @@
+<!-- ============================================================================ -->
+<!-- newsletter/templates/newsletter/unsubscribe_success.html - COMPLETE VERSION -->
+<!-- ============================================================================ -->
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Unsubscribed{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5 text-center">
+                    <div class="mb-4">
+                        <span style="font-size: 80px;">✓</span>
+                    </div>
+                    <h2 class="mb-3" style="color: #525252; font-weight: bold;">You've Been Unsubscribed</h2>
+                    <p class="mb-4" style="color: #888; font-size: 16px; line-height: 1.6;">
+                        You won't receive any more emails from us. We hope to see you again in the future!
+                    </p>
+                    
+                    <div class="alert alert-info">
+                        Changed your mind? You can always <a href="{% url 'newsletter:subscribe' %}">subscribe again</a>.
+                    </div>
+                    
+                    <a href="{% url 'home' %}" class="btn mt-3" style="background: #525252; color: #fff; font-weight: bold; padding: 12px 30px; border-radius: 8px; text-decoration: none;">
+                        Return to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

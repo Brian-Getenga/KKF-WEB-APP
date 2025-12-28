@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard | Kenya Karate Federation{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="relative h-64 bg-[#525252] flex items-center justify-center">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/20"></div>
+    
+    <div class="relative z-10 text-center px-6">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-2">
+            Welcome Back, <span class="text-[#FFCD00]">{{ user.first_name }}</span>
+        </h1>
+        <p class="text-white/80 text-lg">{{ user.profile.belt_level }} Belt • Member since {{ user.date_joined|date:"M Y" }}</p>
+    </div>
+</section>
+
+<!-- Dashboard Content -->
+<section class="py-12 bg-[#f5f5f5] min-h-screen">
+    <div class="max-w-7xl mx-auto px-6">
+        
+        <!-- Profile Completion Alert -->
+        {% if profile_completion < 100 %}
+        <div class="mb-8 p-6 bg-white border-l-4 border-[#FFCD00] rounded">
+            <div class="flex items-start gap-4">
+                <div class="w-12 h-12 bg-[#FFCD00] rounded flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-black" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-[#525252] font-bold mb-2">Complete Your Profile</h3>
+                    <p class="text-[#525252] mb-3">Your profile is {{ profile_completion }}% complete. Add more information to get the full experience.</p>
+                    <div class="w-full bg-[#d6d3d1] rounded-full h-2 mb-3">
+                        <div class="bg-[#FFCD00] h-2 rounded-full" style="width: {{ profile_completion }}%"></div>
+                    </div>
+                    <a href="{% url 'accounts:profile_update' %}" class="inline-block px-6 py-2 bg-[#FFCD00] text-black font-bold rounded hover:bg-[#FBBF24]">
+                        Complete Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div class="bg-white p-6 rounded border-2 border-[#d6d3d1]">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="w-12 h-12 bg-[#FFCD00] rounded flex items-center justify-center">
+                        <svg class="w-6 h-6 text-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-[#525252] text-sm mb-1">Total Classes</p>
+                <p class="text-3xl font-bold text-[#525252]">{{ training_stats.total_classes_attended }}</p>
+            </div>
+
+            <div class="bg-white p-6 rounded border-2 border-[#d6d3d1]">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="w-12 h-12 bg-[#7ccf00] rounded flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-[#525252] text-sm mb-1">Current Streak</p>
+                <p class="text-3xl font-bold text-[#525252]">{{ training_stats.current_streak_days }} days</p>
+            </div>
+
+            <div class="bg-white p-6 rounded border-2 border-[#d6d3d1]">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="w-12 h-12 bg-[#2b7fff] rounded flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-[#525252] text-sm mb-1">Current Belt</p>
+                <p class="text-2xl font-bold text-[#525252]">{{ user.profile.belt_level }}</p>
+            </div>
+
+            <div class="bg-white p-6 rounded border-2 border-[#d6d3d1]">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="w-12 h-12 bg-[#fb2c36] rounded flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-[#525252] text-sm mb-1">Training Hours</p>
+                <p class="text-3xl font-bold text-[#525252]">{{ training_stats.total_training_hours|floatformat:0 }}</p>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid lg:grid-cols-3 gap-8">
+            
+            <!-- Left Column - Bookings & Orders -->
+            <div class="lg:col-span-2 space-y-8">
+                
+                <!-- Recent Bookings -->
+                <div class="bg-white p-6 rounded border-2 border-[#d6d3d1]">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-[#FFCD00] rounded flex items-center justify-center">
+                                <svg class="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <h2 class="text-xl font-bold text-[#525252]">Recent Bookings</h2>
+                        </div>
+                        <a href="{% url 'classes:my_bookings' %}" class="text-[#FFCD00] font-bold hover:text-[#FBBF24]">View All →</a>
+                    </div>
+                    
+                    {% if bookings %}
+                    <div class="space-y-3">
+                        {% for booking in bookings %}
+                        <div class="p-4 bg-[#f5f5f5] rounded border border-[#d6d3d1]">
+                            <div class="flex items-start justify-between">
+                                <div class="flex-1">
+                                    <h3 class="text-[#525252] font-bold mb-1">{{ booking.title }}</h3>
+                                    <p class="text-[#525252] text-sm mb-2">{{ booking.schedule }}</p>
+                                    <span class="inline-block px-3 py-1 rounded text-xs font-bold
+                                        {% if booking.status == 'confirmed' %}bg-[#7ccf00] text-white{% elif booking.status == 'pending' %}bg-[#FFCD00] text-black{% else %}bg-[#d6d3d1] text-[#525252]{% endif %}">
+                                        {{ booking.status|title }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-12">
+                        <svg class="w-16 h-16 text-[#d6d3d1] mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        <p class="text-[#525252] mb-4">No bookings yet</p>
+                        <a href="{% url 'classes:class_list' %}" class="text-[#FFCD00] font-bold hover:text-[#FBBF24]">Browse Classes →</a>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="bg-white p-6 rounded border-2 border-[#d6d3d1]">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-[#7ccf00] rounded flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
+                                </svg>
+                            </div>
+                            <h2 class="text-xl font-bold text-[#525252]">Recent Orders</h2>
+                        </div>
+                        <a href="{% url 'store:product_list' %}" class="text-[#7ccf00] font-bold hover:text-[#00c950]">Shop →</a>
+                    </div>
+                    
+                    {% if orders %}
+                    <div class="space-y-3">
+                        {% for order in orders %}
+                        <div class="p-4 bg-[#f5f5f5] rounded border border-[#d6d3d1]">
+                            <div class="flex items-center justify-between mb-2">
+                                <p class="text-[#525252] text-sm">Order #{{ order.id }}</p>
+                                <span class="inline-block px-3 py-1 rounded text-xs font-bold
+                                    {% if order.status == 'completed' %}bg-[#7ccf00] text-white{% elif order.status == 'processing' %}bg-[#2b7fff] text-white{% else %}bg-[#d6d3d1] text-[#525252]{% endif %}">
+                                    {{ order.status|title }}
+                                </span>
+                            </div>
+                            <p class="text-2xl font-bold text-[#7ccf00]">KES {{ order.total }}</p>
+                            <p class="text-[#525252] text-sm mt-1">{{ order.created_at|date:"F j, Y" }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-12">
+                        <svg class="w-16 h-16 text-[#d6d3d1] mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                        </svg>
+                        <p class="text-[#525252] mb-4">No orders yet</p>
+                        <a href="{% url 'store:product_list' %}" class="text-[#7ccf00] font-bold hover:text-[#00c950]">Visit Store →</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Right Column - Belt Progress & Quick Actions -->
+            <div class="space-y-8">
+                
+                <!-- Belt Progress -->
+                <div class="bg-white p-6 rounded border-2 border-[#d6d3d1]">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-[#2b7fff] rounded flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-xl font-bold text-[#525252]">Belt Progress</h2>
+                    </div>
+                    
+                    {% if belt_history %}
+                    <div class="space-y-3">
+                        {% for belt in belt_history %}
+                        <div class="p-3 bg-[#f5f5f5] rounded border border-[#d6d3d1]">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="font-bold text-[#525252]">{{ belt.current_belt }} Belt</p>
+                                    <p class="text-sm text-[#525252]">{{ belt.achieved_on|date:"M d, Y" }}</p>
+                                </div>
+                                {% if belt.test_score %}
+                                <span class="text-[#2b7fff] font-bold">{{ belt.test_score }}%</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <a href="{% url 'accounts:belt_progress' %}" class="block text-center mt-4 text-[#2b7fff] font-bold hover:text-[#1e5fcc]">
+                        View Full History →
+                    </a>
+                    {% else %}
+                    <p class="text-center text-[#525252] py-8">No belt progress recorded yet</p>
+                    {% endif %}
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white p-6 rounded border-2 border-[#d6d3d1]">
+                    <h2 class="text-xl font-bold text-[#525252] mb-4">Quick Actions</h2>
+                    <div class="space-y-3">
+                        <a href="{% url 'accounts:profile_update' %}" 
+                           class="flex items-center gap-3 p-3 rounded border border-[#d6d3d1] hover:border-[#FFCD00] hover:bg-[#f5f5f5]">
+                            <div class="w-10 h-10 bg-[#FFCD00] rounded flex items-center justify-center">
+                                <svg class="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <span class="font-bold text-[#525252]">Edit Profile</span>
+                        </a>
+
+                        <a href="{% url 'classes:class_list' %}" 
+                           class="flex items-center gap-3 p-3 rounded border border-[#d6d3d1] hover:border-[#7ccf00] hover:bg-[#f5f5f5]">
+                            <div class="w-10 h-10 bg-[#7ccf00] rounded flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"/>
+                                </svg>
+                            </div>
+                            <span class="font-bold text-[#525252]">Browse Classes</span>
+                        </a>
+
+                        <a href="{% url 'store:product_list' %}" 
+                           class="flex items-center gap-3 p-3 rounded border border-[#d6d3d1] hover:border-[#2b7fff] hover:bg-[#f5f5f5]">
+                            <div class="w-10 h-10 bg-[#2b7fff] rounded flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3z"/>
+                                </svg>
+                            </div>
+                            <span class="font-bold text-[#525252]">Visit Store</span>
+                        </a>
+
+                        <a href="{% url 'accounts:settings' %}" 
+                           class="flex items-center gap-3 p-3 rounded border border-[#d6d3d1] hover:border-[#525252] hover:bg-[#f5f5f5]">
+                            <div class="w-10 h-10 bg-[#525252] rounded flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <span class="font-bold text-[#525252]">Settings</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

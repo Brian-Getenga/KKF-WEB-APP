@@ -1,0 +1,38 @@
+<!-- ============================================================================ -->
+<!-- 3. newsletter/emails/payment_confirmation.html -->
+<!-- ============================================================================ -->
+{% extends 'newsletter/emails/base_email.html' %}
+
+{% block title %}Payment Confirmed{% endblock %}
+
+{% block header_title %}✅ Payment Confirmed{% endblock %}
+
+{% block content %}
+<h2>Hi {{ user.get_full_name|default:user.username }}!</h2>
+
+<p>Your payment has been successfully processed!</p>
+
+<div class="info-box">
+    <strong>Booking Reference:</strong> {{ booking.booking_reference }}<br>
+    <strong>Class:</strong> {{ karate_class.title }}<br>
+    <strong>Date:</strong> {{ booking.schedule.date|date:"F d, Y" }}<br>
+    <strong>Time:</strong> {{ booking.schedule.start_time }} - {{ booking.schedule.end_time }}<br>
+    <strong>Amount Paid:</strong> ${{ booking.total_price }}<br>
+    <strong>Payment Method:</strong> {{ booking.payment_method }}
+</div>
+
+<p style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; border-left: 4px solid #28a745;">
+    ✓ Your spot is now secured! We've sent a receipt to your email.
+</p>
+
+<h3>Next Steps:</h3>
+<ol>
+    <li>Arrive 10 minutes early for registration</li>
+    <li>Bring comfortable workout clothes</li>
+    <li>Stay hydrated and bring a water bottle</li>
+</ol>
+
+<a href="{{ site_url }}/bookings/{{ booking.id }}/" class="button">View Booking Details</a>
+
+<p>If you have any questions, feel free to contact us.</p>
+{% endblock %}

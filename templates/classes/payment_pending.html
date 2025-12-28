@@ -1,0 +1,378 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Processing Payment | Kenya Karate Federation{% endblock %}
+
+{% block content %}
+
+<section class="min-h-screen bg-[#f5f5f5] py-16 px-6 flex items-center justify-center">
+    <div class="max-w-2xl w-full">
+        <!-- Main Card -->
+        <div class="bg-white rounded border-2 border-[#d6d3d1] p-8 md:p-12 shadow-sm">
+            
+            <!-- Status Area -->
+            <div id="status-container" class="text-center mb-12">
+                <!-- Loading State -->
+                <div id="loading-state">
+                    <div class="w-32 h-32 mx-auto mb-8 bg-[#f5f5f5] rounded-full flex items-center justify-center border-4 border-[#FFCD00]">
+                        <svg class="w-16 h-16 text-[#525252]" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/>
+                            <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h1 class="text-4xl font-black text-[#525252] mb-4">
+                        Processing Payment
+                    </h1>
+                    <p class="text-[#525252] text-lg mb-6">
+                        📱 Please check your phone and enter your M-Pesa PIN
+                    </p>
+                    
+                    <div class="inline-flex items-center gap-3 bg-[#FFCD00] px-6 py-4 rounded-full mb-10">
+                        <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span id="timer-display" class="font-black text-black text-2xl">{{ timeout_seconds|default:300 }}</span>
+                        <span class="text-black font-bold">seconds remaining</span>
+                    </div>
+
+                    <!-- Status Steps - Clean vertical layout matching your site style -->
+                    <div class="space-y-6 max-w-md mx-auto">
+                        <!-- Step 1 -->
+                        <div class="flex items-center gap-4 text-left bg-[#f5f5f5] p-5 rounded border-2 border-[#7ccf00]">
+                            <div class="w-12 h-12 bg-[#7ccf00] rounded-full flex items-center justify-center flex-shrink-0">
+                                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-bold text-[#525252]">1. Payment Request Sent</p>
+                                <p class="text-sm text-[#525252]">M-Pesa prompt sent to your phone</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 2 -->
+                        <div id="step-pin" class="flex items-center gap-4 text-left bg-[#f5f5f5] p-5 rounded border-2 border-[#FFCD00]">
+                            <div class="w-12 h-12 bg-[#FFCD00] rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="text-black font-bold text-xl">2</span>
+                            </div>
+                            <div>
+                                <p id="step-pin-title" class="font-bold text-[#525252]">Enter Your PIN</p>
+                                <p class="text-sm text-[#525252]">Waiting for you to confirm on your phone</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 3 -->
+                        <div id="step-confirm" class="flex items-center gap-4 text-left bg-[#f5f5f5] p-5 rounded border-2 border-[#d6d3d1]">
+                            <div class="w-12 h-12 bg-[#d6d3d1] rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="text-white font-bold text-xl">3</span>
+                            </div>
+                            <div>
+                                <p id="step-confirm-title" class="text-[#525252]">Confirming Payment</p>
+                                <p class="text-sm text-[#525252]">Finalizing your booking...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Success State -->
+                <div id="success-state" class="hidden text-center">
+                    <svg class="w-32 h-32 mx-auto text-[#7ccf00] mb-8" fill="none" stroke="currentColor" stroke-width="4" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <h1 class="text-5xl font-black text-[#7ccf00] mb-4">
+                        Payment Successful!
+                    </h1>
+                    <p class="text-xl text-[#525252] mb-6">
+                        Your booking has been confirmed
+                    </p>
+                    <p class="text-[#525252]">
+                        Redirecting to confirmation page...
+                    </p>
+                </div>
+
+                <!-- Failed State -->
+                <div id="failed-state" class="hidden text-center">
+                    <svg class="w-32 h-32 mx-auto text-[#fb2c36] mb-8" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                    </svg>
+                    <h1 class="text-5xl font-black text-[#fb2c36] mb-4">
+                        Payment Failed
+                    </h1>
+                    <p class="text-xl text-[#525252] mb-6" id="failure-reason">
+                        Your payment could not be processed.
+                    </p>
+                    <div class="bg-[#fb2c36]/10 border-2 border-[#fb2c36] p-6 rounded max-w-lg mx-auto">
+                        <p class="text-[#525252]">
+                            <strong>Common reasons:</strong><br>
+                            • Insufficient balance<br>
+                            • Payment cancelled by user<br>
+                            • Incorrect PIN<br>
+                            • Network issues
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Timeout State -->
+                <div id="timeout-state" class="hidden text-center">
+                    <svg class="w-32 h-32 mx-auto text-[#FFCD00] mb-8" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                    </svg>
+                    <h1 class="text-5xl font-black text-[#525252] mb-4">
+                        Payment Timeout
+                    </h1>
+                    <p class="text-xl text-[#525252] mb-6">
+                        The payment request has timed out
+                    </p>
+                    <p class="text-[#525252]">
+                        Check your dashboard or try booking again.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Booking Summary -->
+            <div class="bg-[#f5f5f5] p-8 rounded border-2 border-[#d6d3d1] mb-8">
+                <h3 class="text-2xl font-black text-[#525252] mb-6 pb-4 border-b-4 border-[#FFCD00]">Booking Summary</h3>
+                
+                <div class="space-y-4">
+                    <div class="flex justify-between">
+                        <span class="text-[#525252]">Class</span>
+                        <span class="font-bold text-[#525252]">{{ booking.karate_class.title }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-[#525252]">Schedule</span>
+                        <span class="font-bold text-[#525252]">{{ booking.schedule.day_of_week }}, {{ booking.schedule.start_time|time:"g:i A" }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-[#525252]">Location</span>
+                        <span class="font-bold text-[#525252]">{{ booking.schedule.location }}</span>
+                    </div>
+                    <div class="flex justify-between pt-4 border-t-2 border-[#FFCD00]">
+                        <span class="text-[#525252] font-bold text-xl">Amount</span>
+                        <span class="text-3xl font-black text-[#FFCD00]">KES {{ booking.amount_paid }}</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-[#525252]">Reference</span>
+                        <span class="font-mono bg-white px-3 py-1 rounded border border-[#d6d3d1]">{{ booking.booking_reference }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Important Notice -->
+            <div class="bg-[#FFCD00]/10 border-2 border-[#FFCD00] p-6 rounded mb-8">
+                <div class="flex items-start gap-4">
+                    <svg class="w-7 h-7 text-[#FFCD00] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                    </svg>
+                    <div>
+                        <p class="text-[#525252] font-bold mb-1">Important</p>
+                        <p class="text-[#525252] text-sm">
+                            Do not close or refresh this page until payment is complete. 
+                            Your booking will only be confirmed after successful payment.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4">
+                <a href="{% url 'accounts:dashboard' %}" 
+                   class="flex-1 px-8 py-4 border-2 border-[#d6d3d1] text-[#525252] font-bold rounded text-center hover:border-[#FFCD00] transition-colors">
+                    Go to Dashboard
+                </a>
+                
+                <a href="{% url 'classes:cancel_booking' booking.id %}" 
+                   class="flex-1 px-8 py-4 bg-white text-[#fb2c36] font-black rounded text-center border-2 border-[#fb2c36] hover:bg-[#fb2c36]/10 transition-colors">
+                    Cancel Payment
+                </a>
+                
+                <button id="retry-button" class="hidden flex-1 px-8 py-4 bg-[#FFCD00] text-black font-black rounded hover:bg-[#FBBF24] transition-colors">
+                    Try Payment Again
+                </button>
+            </div>
+        </div>
+
+        <!-- Help Section -->
+        <div class="mt-12 text-center">
+            <p class="text-[#525252] mb-4">Having trouble with payment?</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'core:contact' %}" 
+                   class="inline-flex items-center gap-2 px-8 py-4 bg-[#7ccf00] text-white font-bold rounded hover:bg-[#00c950] transition-colors">
+                    Contact Support
+                </a>
+                <a href="tel:+254712345678" 
+                   class="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#525252] font-bold rounded border-2 border-[#d6d3d1] hover:border-[#FFCD00] transition-colors">
+                    Call Us
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+(function() {
+    'use strict';
+
+    const timeoutSeconds = {{ timeout_seconds|default:300 }};
+    const checkInterval = 8000; // Poll every 8 seconds to avoid hammering
+
+    let timeLeft = timeoutSeconds;
+    let intervalId = null;
+    let timerId = null;
+    let isProcessing = false;
+
+    const timerDisplay = document.getElementById('timer-display');
+
+    function startTimer() {
+        timerId = setInterval(() => {
+            timeLeft--;
+            timerDisplay.textContent = timeLeft;
+
+            if (timeLeft <= 30) {
+                timerDisplay.classList.add('text-[#fb2c36]');
+            }
+            if (timeLeft <= 0) {
+                clearInterval(timerId);
+                clearInterval(intervalId);
+                showTimeoutState();
+            }
+        }, 1000);
+    }
+
+    // Step completion functions
+    function completeStep2() {
+        const stepPin = document.getElementById('step-pin');
+        const title = document.getElementById('step-pin-title');
+        const circle = stepPin.querySelector('.w-12');
+
+        circle.classList.replace('bg-[#FFCD00]', 'bg-[#7ccf00]');
+        circle.innerHTML = `
+            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+            </svg>
+        `;
+        stepPin.classList.replace('border-[#FFCD00]', 'border-[#7ccf00]');
+        title.textContent = 'PIN Confirmed';
+        title.classList.add('text-[#7ccf00]');
+    }
+
+    function completeStep3AndRedirect() {
+        const stepConfirm = document.getElementById('step-confirm');
+        const title = document.getElementById('step-confirm-title');
+        const circle = stepConfirm.querySelector('.w-12');
+
+        circle.classList.replace('bg-[#d6d3d1]', 'bg-[#7ccf00]');
+        circle.innerHTML = `
+            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+            </svg>
+        `;
+        stepConfirm.classList.replace('border-[#d6d3d1]', 'border-[#7ccf00]');
+        title.textContent = 'Payment Confirmed!';
+        title.classList.add('text-[#7ccf00]', 'font-bold');
+
+        // Show success message briefly, then redirect
+        showSuccessState();
+
+        setTimeout(() => {
+            window.location.replace('{% url "classes:booking_success" booking.id %}');
+        }, 1800);
+    }
+
+    function hideAllStates() {
+        ['loading-state', 'success-state', 'failed-state', 'timeout-state'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
+        });
+    }
+
+    function showState(id) {
+        hideAllStates();
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('hidden');
+    }
+
+    function showSuccessState() {
+        clearInterval(intervalId);
+        clearInterval(timerId);
+        showState('success-state');
+    }
+
+    function showFailedState(reason = 'Your payment could not be processed.') {
+        clearInterval(intervalId);
+        clearInterval(timerId);
+        showState('failed-state');
+        document.getElementById('failure-reason').textContent = reason;
+        document.getElementById('retry-button').classList.remove('hidden');
+        document.getElementById('retry-button').onclick = () => {
+            window.location.href = '{% url "classes:class_detail" booking.karate_class.slug %}';
+        };
+    }
+
+    function showTimeoutState() {
+        clearInterval(intervalId);
+        clearInterval(timerId);
+        showState('timeout-state');
+    }
+
+    async function checkPaymentStatus() {
+        if (isProcessing) return;
+        isProcessing = true;
+
+        try {
+            const res = await fetch(`{% url "classes:check_payment" booking.id %}`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+
+            if (!res.ok) {
+                console.warn('Check request failed:', res.status);
+                isProcessing = false;
+                return;
+            }
+
+            const data = await res.json();
+
+            // SUCCESS: Payment confirmed via callback (most reliable)
+            if (data.confirmed || data.status === 'Paid' || data.status === 'Confirmed') {
+                completeStep2();           // Show PIN entered
+                completeStep3AndRedirect(); // Complete step 3 + redirect
+                return;
+            }
+
+            // FAILURE
+            if (data.failed || data.status === 'Failed') {
+                showFailedState(data.reason || 'Payment failed or cancelled.');
+                return;
+            }
+
+            // TIMEOUT / EXPIRED
+            if (data.expired || data.status === 'Timeout') {
+                showTimeoutState();
+                return;
+            }
+
+            // Still pending → assume user entered PIN after a few checks
+            if (data.status === 'Pending') {
+                completeStep2();
+            }
+
+        } catch (err) {
+            console.error('Network error during payment check:', err);
+            // Don't break the loop on network errors
+        } finally {
+            isProcessing = false;
+        }
+    }
+
+    // Start polling and timer
+    startTimer();
+    setTimeout(checkPaymentStatus, 5000); // First check after 5s
+    intervalId = setInterval(checkPaymentStatus, checkInterval);
+
+    // Extra check when user returns to tab
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+            checkPaymentStatus();
+        }
+    });
+})();
+</script>
+
+{% endblock %}

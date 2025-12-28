@@ -1,0 +1,122 @@
+<!-- ========================================================================== -->
+<!-- WISHLIST PAGE -->
+<!-- ========================================================================== -->
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}My Wishlist | Kenya Karate Federation{% endblock %}
+
+{% block content %}
+
+<section class="bg-gradient-to-br from-black via-gray-900 to-black py-16">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+        <h1 class="text-4xl md:text-5xl font-black text-white mb-3">
+            My <span class="text-[#FFCD00]">Wishlist</span>
+        </h1>
+        <p class="text-gray-300">Your favorite items saved for later</p>
+    </div>
+</section>
+
+<section class="py-12 bg-gray-50 min-h-screen">
+    <div class="max-w-7xl mx-auto px-6">
+        {% if wishlist_items %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for item in wishlist_items %}
+            <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all group">
+                <div class="relative h-56 bg-gray-100 overflow-hidden">
+                    <a href="{% url 'store:product_detail' item.product.slug %}">
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </a>
+                    
+                    <!-- Remove from Wishlist -->
+                    <form method="POST" action="{% url 'store:toggle_wishlist' item.product.pk %}" class="absolute top-3 right-3">
+                        {% csrf_token %}
+                        <button type="submit" 
+                                class="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-all shadow-lg">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="p-5">
+                    <a href="{% url 'store:product_detail' item.product.slug %}" 
+                       class="text-lg font-bold text-gray-900 hover:text-[#FFCD00] transition-colors mb-2 block line-clamp-2">
+                        {{ item.product.name }}
+                    </a>
+                    
+                    <p class="text-gray-600 text-sm mb-4 line-clamp-2">
+                        {{ item.product.short_description|truncatewords:10 }}
+                    </p>
+                    
+                    <div class="mb-4">
+                        <span class="text-2xl font-black text-[#FFCD00]">KES {{ item.product.final_price }}</span>
+                    </div>
+                    
+                    {% if item.product.is_in_stock %}
+                    <button onclick="addToCart({{ item.product.pk }})" 
+                            class="w-full px-4 py-3 bg-[#FFCD00] hover:bg-[#e6b800] text-black font-bold rounded-lg transition-colors">
+                        Add to Cart
+                    </button>
+                    {% else %}
+                    <button disabled 
+                            class="w-full px-4 py-3 bg-gray-100 text-gray-400 font-semibold rounded-lg cursor-not-allowed">
+                        Out of Stock
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <!-- Empty Wishlist -->
+        <div class="text-center py-20">
+            <div class="w-32 h-32 mx-auto mb-8 bg-gray-100 rounded-2xl flex items-center justify-center">
+                <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                </svg>
+            </div>
+            <h2 class="text-3xl font-black text-gray-900 mb-4">Your wishlist is empty</h2>
+            <p class="text-gray-600 mb-8">Save your favorite items for later</p>
+            <a href="{% url 'store:product_list' %}" 
+               class="inline-block px-8 py-4 bg-[#FFCD00] hover:bg-[#e6b800] text-black font-black rounded-lg transition-colors">
+                Browse Store
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<script>
+function addToCart(productId) {
+    fetch(`/store/cart/add/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: new FormData()
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const cartCount = document.getElementById('cart-count');
+            if (cartCount) cartCount.textContent = data.cart_count;
+            
+            const div = document.createElement('div');
+            div.className = 'fixed top-20 right-4 px-6 py-4 bg-green-50 border-l-4 border-green-500 text-green-800 font-semibold rounded-lg shadow-lg z-50';
+            div.textContent = data.message;
+            document.body.appendChild(div);
+            setTimeout(() => {
+                div.style.opacity = '0';
+                div.style.transition = 'opacity 300ms';
+                setTimeout(() => div.remove(), 300);
+            }, 3000);
+        }
+    });
+}
+</script>
+
+{% endblock %}

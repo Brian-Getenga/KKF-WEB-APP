@@ -1,0 +1,241 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block extrahead %}
+<style>
+    .send-campaign-container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+    }
+    
+    .campaign-info {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .campaign-info h2 {
+        margin-top: 0;
+        color: #333;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+    }
+    
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+    }
+    
+    .info-item {
+        background: white;
+        padding: 15px;
+        border-radius: 5px;
+        border-left: 4px solid #007bff;
+    }
+    
+    .info-label {
+        font-weight: bold;
+        color: #666;
+        font-size: 12px;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+    
+    .info-value {
+        font-size: 16px;
+        color: #333;
+    }
+    
+    .recipients-section {
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .recipients-section h3 {
+        margin-top: 0;
+        color: #333;
+    }
+    
+    .recipient-list {
+        max-height: 300px;
+        overflow-y: auto;
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 15px;
+    }
+    
+    .recipient-item {
+        padding: 8px;
+        border-bottom: 1px solid #dee2e6;
+        font-family: monospace;
+    }
+    
+    .recipient-item:last-child {
+        border-bottom: none;
+    }
+    
+    .warning-box {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-left: 4px solid #ffc107;
+        padding: 20px;
+        border-radius: 5px;
+        margin-bottom: 30px;
+    }
+    
+    .warning-box h3 {
+        margin-top: 0;
+        color: #856404;
+    }
+    
+    .warning-box ul {
+        margin: 10px 0;
+        padding-left: 20px;
+    }
+    
+    .button-group {
+        display: flex;
+        gap: 15px;
+        justify-content: flex-start;
+        margin-top: 30px;
+    }
+    
+    .btn {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s;
+    }
+    
+    .btn-send {
+        background: #28a745;
+        color: white;
+    }
+    
+    .btn-send:hover {
+        background: #218838;
+    }
+    
+    .btn-cancel {
+        background: #6c757d;
+        color: white;
+    }
+    
+    .btn-cancel:hover {
+        background: #5a6268;
+    }
+    
+    .content-preview {
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .content-preview h3 {
+        margin-top: 0;
+        color: #333;
+    }
+    
+    .preview-box {
+        max-height: 400px;
+        overflow-y: auto;
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        border: 1px solid #dee2e6;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="send-campaign-container">
+    <h1>📤 Send Campaign</h1>
+    
+    <div class="campaign-info">
+        <h2>Campaign Information</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Campaign Title</div>
+                <div class="info-value">{{ campaign.title }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Subject</div>
+                <div class="info-value">{{ campaign.subject }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Campaign Type</div>
+                <div class="info-value">{{ campaign.get_campaign_type_display }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Status</div>
+                <div class="info-value">{{ campaign.get_status_display }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="warning-box">
+        <h3>⚠️ Warning: You are about to send this campaign</h3>
+        <ul>
+            <li>This campaign will be sent to <strong>{{ recipient_count }}</strong> subscriber(s)</li>
+            <li>Once sent, this action cannot be undone</li>
+            <li>Make sure you have reviewed the content and recipient list</li>
+            <li>The campaign status will be changed to "Sent" after completion</li>
+        </ul>
+    </div>
+    
+    <div class="recipients-section">
+        <h3>📧 Target Recipients ({{ recipient_count }} total)</h3>
+        <div class="recipient-list">
+            {% for subscriber in recipients|slice:":50" %}
+                <div class="recipient-item">
+                    ✓ {{ subscriber.email }} - {{ subscriber.get_preferences_display }}
+                </div>
+            {% empty %}
+                <div class="recipient-item">No recipients found</div>
+            {% endfor %}
+            {% if recipient_count > 50 %}
+                <div class="recipient-item" style="font-weight: bold; color: #007bff;">
+                    ... and {{ recipient_count|add:"-50" }} more
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="content-preview">
+        <h3>📄 Email Content Preview</h3>
+        <div class="preview-box">
+            {{ campaign.content|safe }}
+        </div>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        <div class="button-group">
+            <button type="submit" class="btn btn-send">
+                📤 Send Campaign Now
+            </button>
+            <a href="{% url 'admin:newsletter_campaign_changelist' %}" class="btn btn-cancel">
+                ✖ Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

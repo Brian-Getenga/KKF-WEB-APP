@@ -1,0 +1,53 @@
+<!-- ============================================================================ -->
+<!-- newsletter/templates/newsletter/unsubscribe.html - COMPLETE VERSION -->
+<!-- ============================================================================ -->
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Unsubscribe{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <div class="mb-3">
+                            <span style="font-size: 60px;">😢</span>
+                        </div>
+                        <h2 class="mb-3" style="color: #525252; font-weight: bold;">We're Sorry to See You Go</h2>
+                        <p style="color: #888; font-size: 16px;">
+                            You're about to unsubscribe from: <strong>{{ subscriber.email }}</strong>
+                        </p>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="form-check mb-4 p-4" style="background-color: #fff9e6; border-radius: 8px;">
+                            {{ form.confirm }}
+                            <label class="form-check-label" for="id_confirm" style="color: #525252; margin-left: 8px;">
+                                {{ form.confirm.label }}
+                            </label>
+                            {% if form.confirm.errors %}
+                                <div class="text-danger small mt-2">{{ form.confirm.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger py-3" style="font-weight: bold; font-size: 16px;">
+                                Confirm Unsubscribe
+                            </button>
+                            <a href="{% url 'home' %}" class="btn btn-outline-secondary py-3">
+                                Cancel (Keep Subscription)
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+<!-- ============================================================================ -->
+<!-- 9. newsletter/emails/order_shipped.html -->
+<!-- ============================================================================ -->
+{% extends 'newsletter/emails/base_email.html' %}
+
+{% block title %}Order Shipped{% endblock %}
+
+{% block header_title %}🚚 Order Shipped{% endblock %}
+
+{% block content %}
+<h2>Hi {{ user.get_full_name|default:user.username }}!</h2>
+
+<p>Great news! Your order has been shipped and is on its way to you!</p>
+
+<div class="info-box">
+    <strong>Order Number:</strong> {{ order.order_number }}<br>
+    <strong>Shipped Date:</strong> {{ order.shipped_at|date:"F d, Y" }}<br>
+    {% if order.tracking_number %}
+    <strong>Tracking Number:</strong> {{ order.tracking_number }}<br>
+    {% endif %}
+    {% if order.carrier %}
+    <strong>Carrier:</strong> {{ order.carrier }}<br>
+    {% endif %}
+    <strong>Estimated Delivery:</strong> {{ order.estimated_delivery|date:"F d, Y" }}
+</div>
+
+<p style="background-color: #e7f3ff; color: #004085; padding: 15px; border-radius: 5px; border-left: 4px solid #0066cc;">
+    📍 Your package is on the way! Track it in real-time using the tracking number above.
+</p>
+
+{% if order.tracking_number %}
+<a href="{{ order.tracking_url }}" class="button">Track Package</a>
+{% endif %}
+
+<h3>What to Expect</h3>
+<ul>
+    <li>Delivery typically takes 3-5 business days</li>
+    <li>Someone must be available to sign for the package</li>
+    <li>You'll receive updates via email and SMS</li>
+</ul>
+
+<a href="{{ site_url }}/orders/{{ order.order_number }}/" class="button">View Order Details</a>
+{% endblock %}

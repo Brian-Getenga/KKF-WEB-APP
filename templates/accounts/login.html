@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Login | Kenya Karate Federation{% endblock %}
+
+{% block content %}
+<section class="min-h-screen flex items-center justify-center bg-[#525252] px-6 py-16">
+  <div class="max-w-md w-full bg-white rounded border-2 border-[#d6d3d1] p-8">
+    
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <div class="w-16 h-16 bg-[#FFCD00] rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+        </svg>
+      </div>
+      <h1 class="text-4xl font-black text-[#525252] mb-4">Welcome Back</h1>
+      <div class="w-24 h-1 bg-[#FFCD00] mx-auto mb-4"></div>
+      <p class="text-[#525252]">Log in to your KKF account</p>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="mb-6">
+      {% for message in messages %}
+      <div class="p-4 rounded border-2 {% if message.tags == 'error' %}bg-red-50 border-[#fb2c36] text-[#fb2c36]{% elif message.tags == 'success' %}bg-green-50 border-[#7ccf00] text-[#7ccf00]{% else %}bg-blue-50 border-[#2b7fff] text-[#2b7fff]{% endif %}">
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Login Form -->
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+      
+      <!-- Non-field errors -->
+      {% if form.non_field_errors %}
+      <div class="p-4 bg-red-50 border-2 border-[#fb2c36] rounded">
+        {% for error in form.non_field_errors %}
+        <p class="text-[#fb2c36] text-sm">{{ error }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Email Field -->
+      <div>
+        <label for="{{ form.username.id_for_label }}" class="block text-[#525252] font-bold mb-2">
+          {{ form.username.label }}
+        </label>
+        {{ form.username }}
+        {% if form.username.errors %}
+          {% for error in form.username.errors %}
+          <p class="text-[#fb2c36] text-sm mt-2">{{ error }}</p>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <!-- Password Field -->
+      <div>
+        <label for="{{ form.password.id_for_label }}" class="block text-[#525252] font-bold mb-2">
+          {{ form.password.label }}
+        </label>
+        {{ form.password }}
+        {% if form.password.errors %}
+          {% for error in form.password.errors %}
+          <p class="text-[#fb2c36] text-sm mt-2">{{ error }}</p>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <!-- Remember Me & Forgot Password -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <input type="checkbox" id="remember_me" class="w-4 h-4 text-[#FFCD00] border-[#d6d3d1] rounded focus:ring-[#FFCD00]">
+          <label for="remember_me" class="text-sm text-[#525252]">Remember me</label>
+        </div>
+        <a href="#" class="text-sm text-[#2b7fff] hover:underline">Forgot password?</a>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit"
+              class="w-full py-4 bg-[#FFCD00] text-black font-bold rounded hover:bg-[#FBBF24] transition-colors">
+        Log In
+      </button>
+    </form>
+
+    <!-- Signup Link -->
+    <p class="text-center text-[#525252] mt-6">
+      Don't have an account?
+      <a href="{% url 'accounts:signup' %}" class="text-[#FFCD00] font-bold hover:text-[#FBBF24]">Sign Up</a>
+    </p>
+  </div>
+</section>
+{% endblock %}

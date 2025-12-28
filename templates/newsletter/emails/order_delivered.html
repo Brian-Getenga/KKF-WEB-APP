@@ -1,0 +1,34 @@
+
+<!-- ============================================================================ -->
+<!-- 10. newsletter/emails/order_delivered.html -->
+<!-- ============================================================================ -->
+{% extends 'newsletter/emails/base_email.html' %}
+
+{% block title %}Order Delivered{% endblock %}
+
+{% block header_title %}✨ Order Delivered{% endblock %}
+
+{% block content %}
+<h2>Hi {{ user.get_full_name|default:user.username }}!</h2>
+
+<p>Your order has been successfully delivered!</p>
+
+<div class="info-box">
+    <strong>Order Number:</strong> {{ order.order_number }}<br>
+    <strong>Delivered Date:</strong> {{ order.delivered_at|date:"F d, Y g:i A" }}<br>
+    <strong>Delivery Location:</strong> {{ order.delivery_location|default:"Front door" }}
+</div>
+
+<p style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; border-left: 4px solid #28a745;">
+    ✓ Package successfully delivered! We hope you love your purchase.
+</p>
+
+<h3>Enjoying Your Purchase?</h3>
+<p>We'd love to hear your feedback! Leave a review and help other customers make informed decisions.</p>
+
+<a href="{{ site_url }}/orders/{{ order.order_number }}/review/" class="button">Write a Review</a>
+
+<p>If you have any issues with your order, please don't hesitate to contact our customer support team.</p>
+
+<a href="{{ site_url }}/contact/" class="button" style="background-color: #6c757d;">Contact Support</a>
+{% endblock %}

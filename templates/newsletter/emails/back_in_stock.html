@@ -1,0 +1,43 @@
+
+<!-- ============================================================================ -->
+<!-- 5. newsletter/emails/back_in_stock.html -->
+<!-- ============================================================================ -->
+{% extends 'newsletter/emails/base_email.html' %}
+
+{% block title %}Back in Stock{% endblock %}
+
+{% block header_title %}🎉 Back in Stock!{% endblock %}
+
+{% block content %}
+<h2>Hi {{ user.get_full_name|default:user.username }}!</h2>
+
+<p>Great news! The item you've been waiting for is back in stock!</p>
+
+<div style="text-align: center; margin: 30px 0;">
+    {% if product.image %}
+    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 300px; border-radius: 8px;">
+    {% endif %}
+</div>
+
+<div class="info-box">
+    <strong>Product:</strong> {{ product.name }}<br>
+    <strong>Price:</strong> ${{ product.price }}
+    {% if product.discount_price %}
+    <span style="color: #ff6b6b; font-weight: bold;">
+        → Sale Price: ${{ product.discount_price }} ({{ product.discount_percentage }}% OFF)
+    </span>
+    {% endif %}
+    <br>
+    <strong>Stock Available:</strong> {{ product.stock }} units
+</div>
+
+<p>{{ product.description|truncatewords:30 }}</p>
+
+<p style="background-color: #fff3cd; color: #856404; padding: 15px; border-radius: 5px; border-left: 4px solid #ffc107;">
+    ⚡ Hurry! Limited stock available. Get yours before it's gone again!
+</p>
+
+<a href="{{ site_url }}/store/products/{{ product.slug }}/" class="button">Shop Now</a>
+
+<p>This item was on your wishlist. Happy shopping!</p>
+{% endblock %}

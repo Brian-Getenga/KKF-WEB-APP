@@ -1,0 +1,39 @@
+<!-- ============================================================================ -->
+<!-- 11. newsletter/emails/order_cancelled.html -->
+<!-- ============================================================================ -->
+{% extends 'newsletter/emails/base_email.html' %}
+
+{% block title %}Order Cancelled{% endblock %}
+
+{% block header_title %}❌ Order Cancelled{% endblock %}
+
+{% block content %}
+<h2>Hi {{ user.get_full_name|default:user.username }}!</h2>
+
+<p>Your order has been cancelled as requested.</p>
+
+<div class="info-box">
+    <strong>Order Number:</strong> {{ order.order_number }}<br>
+    <strong>Cancelled Date:</strong> {{ order.cancelled_at|date:"F d, Y g:i A" }}<br>
+    {% if order.cancellation_reason %}
+    <strong>Reason:</strong> {{ order.cancellation_reason }}<br>
+    {% endif %}
+    <strong>Refund Amount:</strong> ${{ order.total_amount }}
+</div>
+
+<h3>Refund Information</h3>
+<p>{% if order.payment_status == 'Paid' %}
+    Your refund of <strong>${{ order.total_amount }}</strong> will be processed within 5-7 business days. 
+    The refund will be credited to your original payment method.
+{% else %}
+    Since payment was not completed, no refund is necessary.
+{% endif %}</p>
+
+<p style="background-color: #fff3cd; color: #856404; padding: 15px; border-radius: 5px; border-left: 4px solid #ffc107;">
+    💡 Changed your mind? You can place a new order anytime!
+</p>
+
+<a href="{{ site_url }}/store/" class="button">Continue Shopping</a>
+
+<p>If you have any questions about this cancellation, please contact our support team.</p>
+{% endblock %}

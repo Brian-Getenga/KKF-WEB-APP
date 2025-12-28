@@ -1,0 +1,257 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ category.name }} | Gallery | Kenya Karate Federation{% endblock %}
+
+{% block extra_head %}
+<!-- Lightbox CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
+<style>
+    .lb-data .lb-caption { font-weight: 600; font-size: 16px; }
+    .filter-btn.active { background-color: #FFCD00; color: black; border-color: #FFCD00; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="relative h-80 bg-black flex items-center justify-center overflow-hidden">
+    <img src="{% static 'images/galary_hero.jpg' %}" alt="{{ category.name }}" 
+         class="absolute w-full h-full object-cover opacity-20">
+    
+    <div class="relative z-10 text-center px-6 max-w-5xl mx-auto w-full">
+        <a href="{% url 'gallery:gallery' %}" class="inline-block text-gray-300 hover:text-white mb-4 text-sm font-semibold">
+            <svg class="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Back to Gallery
+        </a>
+        
+        <div class="mb-6">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-[#FFCD00] border-4 border-white shadow-2xl">
+                {% if category.icon %}
+                <i class="{{ category.icon }} text-3xl text-black"></i>
+                {% else %}
+                <svg class="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                {% endif %}
+            </div>
+        </div>
+        
+        <h1 class="text-5xl md:text-6xl font-black text-white mb-3 leading-tight">
+            {{ category.name }}
+        </h1>
+        {% if category.description %}
+        <p class="text-xl text-gray-300 max-w-2xl mx-auto mb-6">
+            {{ category.description }}
+        </p>
+        {% endif %}
+        
+        <div class="inline-block px-6 py-2 bg-[#FFCD00] text-black font-bold text-lg">
+            {{ page_obj.paginator.count }} {{ page_obj.paginator.count|pluralize:"Image,Images" }}
+        </div>
+    </div>
+</section>
+
+<!-- Category Navigation -->
+<section class="py-4 bg-white border-b-2 border-stone-300 sticky top-0 z-40 shadow-md">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="flex gap-3 overflow-x-auto pb-2">
+            <a href="{% url 'gallery:gallery' %}" 
+               class="flex-shrink-0 px-5 py-2 bg-white text-gray-700 font-semibold border-2 border-stone-300 hover:border-[#FFCD00] hover:text-[#FFCD00]">
+                <svg class="w-4 h-4 inline-block mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                </svg>
+                All
+            </a>
+            {% for cat in categories %}
+            <a href="{% url 'gallery:category' cat.slug %}" 
+               class="filter-btn flex-shrink-0 px-5 py-2 bg-white text-gray-700 font-semibold border-2 border-stone-300 hover:border-[#FFCD00] hover:text-[#FFCD00] {% if cat.slug == category.slug %}active{% endif %}">
+                {% if cat.icon %}
+                <i class="{{ cat.icon }} mr-2"></i>
+                {% endif %}
+                {{ cat.name }}
+                <span class="ml-2 px-2 py-0.5 bg-gray-200 text-gray-600 text-xs font-bold">{{ cat.image_count }}</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Grid -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-6">
+        {% if images %}
+        <div class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
+            {% for item in images %}
+            <div class="break-inside-avoid bg-white border-2 border-stone-300 hover:border-gray-400 overflow-hidden group">
+                <div class="relative overflow-hidden bg-gray-100">
+                    {% if item.thumbnail %}
+                    <img src="{{ item.thumbnail.url }}" alt="{{ item.title }}" 
+                         class="w-full h-auto object-cover"
+                         loading="lazy">
+                    {% elif item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.title }}" 
+                         class="w-full h-auto object-cover"
+                         loading="lazy">
+                    {% endif %}
+                    
+                    {% if item.is_featured %}
+                    <div class="absolute top-3 right-3 px-3 py-1 bg-[#FFCD00] text-black font-bold text-xs flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                        Featured
+                    </div>
+                    {% endif %}
+                    
+                    {% if item.is_video %}
+                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
+                        <div class="w-16 h-16 bg-[#2b7fff] flex items-center justify-center">
+                            <svg class="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="absolute inset-0 bg-black bg-opacity-60 opacity-0 group-hover:opacity-100 flex items-center justify-center">
+                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="p-4">
+                    <h3 class="text-[#525252] font-bold text-base mb-1 group-hover:text-[#FFCD00]">
+                        {{ item.title }}
+                    </h3>
+                    {% if item.caption %}
+                    <p class="text-gray-600 text-sm mb-2 line-clamp-2">{{ item.caption }}</p>
+                    {% endif %}
+                    
+                    <div class="flex items-center justify-between text-xs text-gray-500">
+                        <span class="flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            {{ item.uploaded_at|date:"M d, Y" }}
+                        </span>
+                        {% if item.view_count %}
+                        <span class="flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                            {{ item.view_count }}
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <a href="{{ item.image.url }}" 
+                   data-lightbox="gallery" 
+                   data-title="{{ item.title }} - {{ item.caption }}" 
+                   class="absolute inset-0"></a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <div class="mt-12 flex justify-center">
+            <nav class="flex items-center gap-2">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" 
+                   class="px-4 py-2 bg-white border-2 border-stone-300 text-[#525252] hover:border-gray-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                </a>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <span class="px-4 py-2 bg-[#FFCD00] text-black font-bold">{{ num }}</span>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <a href="?page={{ num }}" 
+                       class="px-4 py-2 bg-white border-2 border-stone-300 text-[#525252] hover:border-gray-400">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" 
+                   class="px-4 py-2 bg-white border-2 border-stone-300 text-[#525252] hover:border-gray-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                {% endif %}
+            </nav>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <!-- Empty State -->
+        <div class="text-center py-20">
+            <div class="w-32 h-32 mx-auto mb-8 bg-gray-200 flex items-center justify-center">
+                <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+            </div>
+            <h2 class="text-3xl font-black text-[#525252] mb-4">No Images Yet</h2>
+            <p class="text-gray-600 mb-8 text-lg">Check back soon for new content in this category</p>
+            <a href="{% url 'gallery:gallery' %}" 
+               class="inline-block px-8 py-3 bg-[#FFCD00] text-black font-bold hover:bg-[#e6b800]">
+                Browse All Images
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-20 bg-white">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+        <div class="mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-[#7ccf00]">
+                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+        </div>
+        <h2 class="text-4xl md:text-5xl font-black text-[#525252] mb-6">
+            Want to Be Featured?
+        </h2>
+        <p class="text-[#525252] text-lg md:text-xl mb-10 max-w-2xl mx-auto">
+            Join our classes and become part of the KKF family. Your journey could be our next success story.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-6 justify-center">
+            <a href="{% url 'classes:class_list' %}" 
+               class="px-10 py-4 bg-[#FFCD00] text-black font-bold text-lg hover:bg-[#e6b800]">
+                View Classes
+            </a>
+            <a href="{% url 'core:contact' %}" 
+               class="px-10 py-4 bg-transparent border-2 border-stone-300 text-[#525252] font-bold text-lg hover:border-[#FFCD00] hover:text-[#FFCD00]">
+                Contact Us
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<!-- Lightbox JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+<script>
+    lightbox.option({
+        'resizeDuration': 200,
+        'wrapAround': true,
+        'albumLabel': 'Image %1 of %2',
+        'fadeDuration': 300,
+        'imageFadeDuration': 300
+    });
+</script>
+{% endblock %}

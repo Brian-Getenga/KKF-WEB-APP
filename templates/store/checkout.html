@@ -1,0 +1,399 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Secure Checkout | Kenya Karate Federation{% endblock %}
+
+{% block content %}
+
+
+<section class="relative h-[400px] bg-black flex items-center justify-center">
+    <img src="{% static 'images/checkout_hero.jpg' %}" alt="Karate Store" 
+         class="absolute w-full h-full object-cover opacity-30">
+    <div class="relative z-10 text-center px-6">
+        <div class="flex items-center justify-center gap-3 mb-4">
+            <svg class="w-10 h-10 text-[#7ccf00]" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+            </svg>
+            <h1 class="text-4xl md:text-5xl font-black text-white">
+                Secure <span class="text-[#FFCD00]">Checkout</span>
+            </h1>
+        </div>
+        <p class="text-white text-lg">Your information is encrypted and secure</p>
+    </div>
+</section>
+
+
+<!-- Hero Section
+<section class="bg-gradient-to-br from-black via-gray-900 to-black py-12">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+        <div class="flex items-center justify-center gap-3 mb-4">
+            <div class="w-14 h-14 bg-[#7ccf00] rounded-xl flex items-center justify-center">
+                <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-black text-white">
+                Secure Checkout
+            </h1>
+        </div>
+        <p class="text-gray-300">Your information is encrypted and secure</p>
+    </div>
+</section> -->
+
+<!-- Security Badge -->
+<section class="py-4 bg-green-50 border-b-2 border-green-500">
+    <div class="max-w-4xl mx-auto px-6">
+        <div class="flex items-center justify-center gap-4">
+            <svg class="w-8 h-8 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            <div>
+                <p class="text-green-800 font-bold">SSL Encrypted Checkout</p>
+                <p class="text-green-700 text-sm">Your payment information is 100% secure</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-12 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="grid lg:grid-cols-5 gap-8">
+            
+            <!-- Checkout Form -->
+            <div class="lg:col-span-3">
+                <form method="POST" id="checkout-form" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <!-- Shipping Information -->
+                    <div class="bg-white rounded-xl p-8 shadow-sm">
+                        <div class="flex items-center gap-3 mb-6 pb-4 border-b-2 border-[#FFCD00]">
+                            <div class="w-8 h-8 bg-[#FFCD00] rounded-lg flex items-center justify-center font-black text-sm">1</div>
+                            <h3 class="text-2xl font-black text-gray-900">Shipping Information</h3>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-gray-900 font-semibold mb-2 text-sm">
+                                    Full Name <span class="text-red-600">*</span>
+                                </label>
+                                <input type="text" name="shipping_name" required
+                                       value="{{ form.shipping_name.value|default:'' }}"
+                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#7ccf00] focus:outline-none transition-colors"
+                                       placeholder="John Doe">
+                            </div>
+                            <div>
+                                <label class="block text-gray-900 font-semibold mb-2 text-sm">
+                                    Email Address <span class="text-red-600">*</span>
+                                </label>
+                                <input type="email" name="shipping_email" required
+                                       value="{{ form.shipping_email.value|default:'' }}"
+                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#7ccf00] focus:outline-none transition-colors"
+                                       placeholder="john@example.com">
+                            </div>
+                            <div>
+                                <label class="block text-gray-900 font-semibold mb-2 text-sm">
+                                    Phone Number <span class="text-red-600">*</span>
+                                </label>
+                                <input type="tel" name="shipping_phone" required
+                                       value="{{ form.shipping_phone.value|default:'' }}"
+                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#7ccf00] focus:outline-none transition-colors"
+                                       placeholder="0712345678">
+                            </div>
+                            <div>
+                                <label class="block text-gray-900 font-semibold mb-2 text-sm">
+                                    City <span class="text-red-600">*</span>
+                                </label>
+                                <input type="text" name="shipping_city" required
+                                       value="{{ form.shipping_city.value|default:'' }}"
+                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#7ccf00] focus:outline-none transition-colors"
+                                       placeholder="Nairobi">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-gray-900 font-semibold mb-2 text-sm">
+                                    Street Address <span class="text-red-600">*</span>
+                                </label>
+                                <input type="text" name="shipping_address" required
+                                       value="{{ form.shipping_address.value|default:'' }}"
+                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#7ccf00] focus:outline-none transition-colors"
+                                       placeholder="Building, Street, Apartment">
+                            </div>
+                            <div>
+                                <label class="block text-gray-900 font-semibold mb-2 text-sm">
+                                    Postal Code (Optional)
+                                </label>
+                                <input type="text" name="shipping_postal_code"
+                                       value="{{ form.shipping_postal_code.value|default:'' }}"
+                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#7ccf00] focus:outline-none transition-colors"
+                                       placeholder="00100">
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <label class="block text-gray-900 font-semibold mb-2 text-sm">Delivery Notes (Optional)</label>
+                            <textarea name="delivery_notes" rows="3"
+                                      class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#7ccf00] focus:outline-none transition-colors"
+                                      placeholder="Any special instructions for delivery...">{{ form.delivery_notes.value|default:'' }}</textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Shipping Zone -->
+                    <div class="bg-white rounded-xl p-8 shadow-sm">
+                        <div class="flex items-center gap-3 mb-6 pb-4 border-b-2 border-[#7ccf00]">
+                            <div class="w-8 h-8 bg-[#7ccf00] rounded-lg flex items-center justify-center font-black text-white text-sm">2</div>
+                            <h3 class="text-2xl font-black text-gray-900">Delivery Zone</h3>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            {% for zone in shipping_zones %}
+                            <label class="flex items-start gap-4 p-4 border-2 border-gray-200 hover:border-[#7ccf00] rounded-lg cursor-pointer transition-all">
+                                <input type="radio" name="shipping_zone" value="{{ zone.pk }}" 
+                                       data-cost="{{ zone.shipping_cost }}"
+                                       class="mt-1 shipping-zone-radio w-4 h-4 text-[#7ccf00]" {% if forloop.first %}checked{% endif %}>
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div>
+                                            <p class="font-bold text-gray-900">{{ zone.name }}</p>
+                                            <p class="text-sm text-gray-600">{{ zone.counties }}</p>
+                                        </div>
+                                        <p class="font-bold text-[#FFCD00]">
+                                            {% if zone.shipping_cost > 0 %}KES {{ zone.shipping_cost }}{% else %}Free{% endif %}
+                                        </p>
+                                    </div>
+                                    <p class="text-sm text-gray-500 flex items-center gap-1">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                                        </svg>
+                                        Estimated delivery: {{ zone.estimated_days }} days
+                                    </p>
+                                </div>
+                            </label>
+                            {% endfor %}
+                        </div>
+                        
+                        <input type="hidden" name="shipping_cost" id="shipping_cost" value="{{ shipping_cost }}">
+                    </div>
+                    
+                    <!-- Payment Method -->
+                    <div class="bg-white rounded-xl p-8 shadow-sm">
+                        <div class="flex items-center gap-3 mb-6 pb-4 border-b-2 border-[#2b7fff]">
+                            <div class="w-8 h-8 bg-[#2b7fff] rounded-lg flex items-center justify-center font-black text-white text-sm">3</div>
+                            <h3 class="text-2xl font-black text-gray-900">Payment Method</h3>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <!-- M-Pesa -->
+                            <label class="flex items-center gap-4 p-4 border-2 border-[#7ccf00] bg-green-50 rounded-lg cursor-pointer">
+                                <input type="radio" name="payment_method" value="mpesa" checked class="payment-radio w-4 h-4 text-[#7ccf00]">
+                                <div class="flex-1">
+                                    <p class="font-bold text-gray-900">M-Pesa</p>
+                                    <p class="text-sm text-gray-600">Pay securely with your M-Pesa account</p>
+                                </div>
+                                <div class="w-12 h-12 rounded-lg overflow-hidden flex items-center justify-center bg-white">
+    <img src="{% static 'images/M-PESA-logo-2.png' %}" alt="M-PESA" class="w-full h-full object-contain p-1">
+</div>
+
+                            </label>
+                            
+                            <!-- M-Pesa Phone Number -->
+                            <div id="mpesa-phone-field" class="pl-4">
+                                <label class="block text-gray-900 font-semibold mb-2 text-sm">
+                                    M-Pesa Phone Number <span class="text-red-600">*</span>
+                                </label>
+                                <input type="tel" name="mpesa_phone" id="mpesa_phone" required
+                                       value="{{ form.mpesa_phone.value|default:'' }}"
+                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#7ccf00] focus:outline-none transition-colors"
+                                       placeholder="254712345678">
+                                <p class="text-gray-500 text-sm mt-2">Format: 254XXXXXXXXX (without +)</p>
+                            </div>
+                            
+                            <!-- Cash on Delivery -->
+                            <label class="flex items-center gap-4 p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-[#FFCD00] transition-colors">
+                                <input type="radio" name="payment_method" value="cash" class="payment-radio w-4 h-4 text-[#FFCD00]">
+                                <div class="flex-1">
+                                    <p class="font-bold text-gray-900">Cash on Delivery</p>
+                                    <p class="text-sm text-gray-600">Pay when you receive your order</p>
+                                </div>
+                                <div class="w-12 h-12 bg-[#FFCD00] rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-black" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/>
+                                        <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Terms & Submit -->
+                    <div class="bg-white rounded-xl p-8 shadow-sm">
+                        <label class="flex items-start gap-3 mb-6">
+                            <input type="checkbox" required class="mt-1 w-4 h-4 text-[#7ccf00] rounded">
+                            <span class="text-gray-700 text-sm">
+                                I agree to the <a href="#" class="text-[#2b7fff] hover:underline font-semibold">Terms & Conditions</a> 
+                                and <a href="#" class="text-[#2b7fff] hover:underline font-semibold">Privacy Policy</a>
+                            </span>
+                        </label>
+                        
+                        <button type="submit" id="submit-button"
+                                class="w-full px-8 py-4 bg-[#FFCD00] hover:bg-[#e6b800] text-black font-black text-lg rounded-lg transition-colors flex items-center justify-center gap-3 relative">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>Complete Secure Payment</span>
+                            <div id="loading-spinner" class="hidden absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
+                                <svg class="animate-spin h-8 w-8 text-[#FFCD00]" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            </div>
+                        </button>
+                        
+                        <div class="flex items-center justify-center gap-4 pt-4 mt-4 border-t border-gray-200">
+                            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <p class="text-gray-500 text-sm">256-bit SSL encryption • PCI DSS compliant</p>
+                        </div>
+                    </div>
+                </form>
+                
+                <div class="mt-6 text-center">
+                    <a href="{% url 'store:cart' %}" 
+                       class="text-gray-600 hover:text-[#FFCD00] transition-colors inline-flex items-center gap-2 font-semibold">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
+                        </svg>
+                        Back to Cart
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Order Summary Sidebar -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl p-8 shadow-sm sticky top-6">
+                    <h2 class="text-2xl font-black text-gray-900 mb-6 pb-4 border-b-2 border-[#FFCD00]">
+                        Order Summary
+                    </h2>
+                    
+                    <!-- Cart Items -->
+                    <div class="space-y-4 mb-6 pb-6 border-b border-gray-200 max-h-96 overflow-y-auto">
+                        {% for item in cart.items.all %}
+                        <div class="flex gap-4">
+                            {% if item.product.image %}
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" 
+                                 class="w-16 h-16 object-cover rounded-lg">
+                            {% else %}
+                            <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            {% endif %}
+                            <div class="flex-1">
+                                <p class="text-gray-900 font-semibold text-sm">{{ item.product.name }}</p>
+                                <p class="text-gray-500 text-xs">Qty: {{ item.quantity }}</p>
+                                <p class="text-[#FFCD00] font-bold text-sm mt-1">KES {{ item.total_price }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Pricing -->
+                    <div class="space-y-3 mb-6 pb-6 border-b border-gray-200">
+                        <div class="flex justify-between text-gray-600">
+                            <span>Subtotal ({{ cart.total_items }} items)</span>
+                            <span class="font-semibold text-gray-900">KES {{ subtotal }}</span>
+                        </div>
+                        {% if discount_amount > 0 %}
+                        <div class="flex justify-between text-green-600">
+                            <span class="flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5 5a3 3 0 015-2.236A3 3 0 0114.83 6H16a2 2 0 110 4h-5V9a1 1 0 10-2 0v1H4a2 2 0 110-4h1.17C5.06 5.687 5 5.35 5 5zm4 1V5a1 1 0 10-1 1h1zm3 0a1 1 0 10-1-1v1h1z" clip-rule="evenodd"/>
+                                </svg>
+                                Discount
+                            </span>
+                            <span class="font-semibold">-KES {{ discount_amount }}</span>
+                        </div>
+                        {% endif %}
+                        <div class="flex justify-between text-gray-600">
+                            <span>Delivery</span>
+                            <span class="font-semibold text-[#7ccf00]" id="shipping-display">
+                                {% if shipping_cost > 0 %}KES {{ shipping_cost }}{% else %}Free{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Total -->
+                    <div class="flex justify-between items-center">
+                        <span class="text-xl font-bold text-gray-900">Total</span>
+                        <span class="text-3xl font-black text-[#FFCD00]" id="total-display">
+                            KES {{ total }}
+                        </span>
+                    </div>
+                    
+                    <!-- Money-back Guarantee -->
+                    <div class="mt-6 pt-6 border-t border-gray-200">
+                        <div class="flex items-center gap-3 text-gray-600 text-sm">
+                            <svg class="w-6 h-6 text-[#7ccf00] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>30-day money-back guarantee</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+// Shipping zone selection
+document.querySelectorAll('.shipping-zone-radio').forEach(radio => {
+    radio.addEventListener('change', function() {
+        const cost = parseFloat(this.dataset.cost);
+        const subtotal = parseFloat('{{ subtotal|floatformat:2 }}'.replace(',', ''));
+        const discount = parseFloat('{{ discount_amount|floatformat:2 }}'.replace(',', ''));
+        const total = subtotal - discount + cost;
+        
+        document.getElementById('shipping_cost').value = cost.toFixed(2);
+        document.getElementById('shipping-display').textContent = cost > 0 ? `KES ${cost.toFixed(2)}` : 'Free';
+        document.getElementById('total-display').textContent = `KES ${total.toFixed(2)}`;
+    });
+});
+
+// Payment method selection
+document.querySelectorAll('.payment-radio').forEach(radio => {
+    radio.addEventListener('change', function() {
+        const mpesaField = document.getElementById('mpesa-phone-field');
+        const mpesaPhone = document.getElementById('mpesa_phone');
+        
+        if (this.value === 'mpesa') {
+            mpesaField.classList.remove('hidden');
+            mpesaPhone.setAttribute('required', '');
+        } else {
+            mpesaField.classList.add('hidden');
+            mpesaPhone.removeAttribute('required');
+        }
+    });
+});
+
+// Form submission
+document.getElementById('checkout-form').addEventListener('submit', function(e) {
+    const submitButton = document.getElementById('submit-button');
+    const spinner = document.getElementById('loading-spinner');
+    
+    submitButton.disabled = true;
+    spinner.classList.remove('hidden');
+});
+
+// Validate M-Pesa phone number format
+document.getElementById('mpesa_phone').addEventListener('blur', function() {
+    const phone = this.value;
+    if (phone && !phone.match(/^254[0-9]{9}$/)) {
+        this.setCustomValidity('Please enter a valid M-Pesa number (format: 254XXXXXXXXX)');
+        this.reportValidity();
+    } else {
+        this.setCustomValidity('');
+    }
+});
+</script>
+
+{% endblock %}

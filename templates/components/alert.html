@@ -1,0 +1,83 @@
+<!-- MESSAGES NOTIFICATION COMPONENT -->
+<!-- Place this in your base template or any page where you want to show messages -->
+
+{% if messages %}
+  <div class="fixed top-20 right-4 space-y-3 z-50 max-w-md">
+    {% for message in messages %}
+      <div class="bg-white border-2 {% if message.tags == 'success' %}border-green-600{% elif message.tags == 'error' %}border-red-600{% elif message.tags == 'info' %}border-blue-600{% else %}border-yellow-500{% endif %} p-4 shadow-lg animate-slideIn">
+        <div class="flex items-start gap-3">
+          <!-- Icon -->
+          <div class="flex-shrink-0 w-8 h-8 border-2 border-black flex items-center justify-center {% if message.tags == 'success' %}bg-green-600{% elif message.tags == 'error' %}bg-red-600{% elif message.tags == 'info' %}bg-blue-600{% else %}bg-yellow-500{% endif %}">
+            {% if message.tags == 'success' %}
+              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+            {% elif message.tags == 'error' %}
+              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+              </svg>
+            {% elif message.tags == 'info' %}
+              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+              </svg>
+            {% else %}
+              <svg class="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+              </svg>
+            {% endif %}
+          </div>
+          
+          <!-- Message Content -->
+          <div class="flex-1">
+            <p class="text-black font-semibold text-sm leading-relaxed">
+              {{ message }}
+            </p>
+          </div>
+          
+          <!-- Close Button -->
+          <button onclick="this.parentElement.parentElement.remove()" 
+                  class="flex-shrink-0 w-6 h-6 border-2 border-[#d6d3d1] bg-white hover:border-black hover:bg-[#f5f5f4] transition-colors flex items-center justify-center">
+            <svg class="w-4 h-4 text-[#525252]" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Auto-dismiss script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const messages = document.querySelectorAll('.animate-slideIn');
+      messages.forEach(function(message) {
+        setTimeout(function() {
+          message.style.transition = 'opacity 0.3s ease-out';
+          message.style.opacity = '0';
+          setTimeout(function() {
+            message.remove();
+          }, 300);
+        }, 5000); // Auto-dismiss after 5 seconds
+      });
+    });
+  </script>
+
+  <!-- Add this to your CSS or in a <style> tag -->
+  <style>
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    .animate-slideIn {
+      animation: slideIn 0.3s ease-out;
+    }
+  </style>
+{% endif %}
+

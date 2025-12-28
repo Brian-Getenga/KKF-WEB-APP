@@ -1,0 +1,38 @@
+
+<!-- ============================================================================ -->
+<!-- 7. newsletter/emails/payment_confirmed.html -->
+<!-- ============================================================================ -->
+{% extends 'newsletter/emails/base_email.html' %}
+
+{% block title %}Payment Confirmed{% endblock %}
+
+{% block header_title %}✅ Payment Received{% endblock %}
+
+{% block content %}
+<h2>Hi {{ user.get_full_name|default:user.username }}!</h2>
+
+<p>We've received your payment for order <strong>{{ order.order_number }}</strong>.</p>
+
+<div class="info-box">
+    <strong>Order Number:</strong> {{ order.order_number }}<br>
+    <strong>Payment Date:</strong> {{ order.payment_date|date:"F d, Y g:i A" }}<br>
+    <strong>Payment Method:</strong> {{ order.get_payment_method_display }}<br>
+    <strong>Amount Paid:</strong> ${{ order.total_amount }}
+</div>
+
+<p style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; border-left: 4px solid #28a745;">
+    ✓ Payment confirmed! Your order is now being processed.
+</p>
+
+<h3>What's Next?</h3>
+<ol>
+    <li>We're preparing your order for shipment</li>
+    <li>You'll receive a tracking number once shipped</li>
+    <li>Estimated delivery: 3-5 business days</li>
+</ol>
+
+<a href="{{ site_url }}/orders/{{ order.order_number }}/" class="button">View Order Status</a>
+
+<p>Thank you for shopping with us!</p>
+{% endblock %}
+

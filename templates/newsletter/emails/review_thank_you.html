@@ -1,0 +1,40 @@
+
+<!-- ============================================================================ -->
+<!-- 12. newsletter/emails/review_thank_you.html -->
+<!-- ============================================================================ -->
+{% extends 'newsletter/emails/base_email.html' %}
+
+{% block title %}Thank You for Your Review{% endblock %}
+
+{% block header_title %}⭐ Thank You!{% endblock %}
+
+{% block content %}
+<h2>Hi {{ user.get_full_name|default:user.username }}!</h2>
+
+<p>Thank you for taking the time to review <strong>{{ product.name }}</strong>!</p>
+
+<div class="info-box">
+    <strong>Product:</strong> {{ product.name }}<br>
+    <strong>Your Rating:</strong> {{ review.rating }}/5 ⭐<br>
+    <strong>Review Date:</strong> {{ review.created_at|date:"F d, Y" }}
+</div>
+
+<p><strong>Your Review:</strong></p>
+<p style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; font-style: italic;">
+    {{ review.comment }}
+</p>
+
+<p>Your feedback helps other customers make informed decisions and helps us improve our products and services.</p>
+
+{% if review.verified_purchase %}
+<p style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; border-left: 4px solid #28a745;">
+    ✓ Verified Purchase - Your review is marked as a verified purchase!
+</p>
+{% endif %}
+
+<a href="{{ site_url }}/store/products/{{ product.slug }}/#review-{{ review.id }}" class="button">View Your Review</a>
+
+<p>Keep shopping and sharing your experiences!</p>
+
+<a href="{{ site_url }}/store/" class="button" style="background-color: #6c757d;">Browse More Products</a>
+{% endblock %}

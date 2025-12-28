@@ -1,0 +1,45 @@
+
+<!-- ============================================================================ -->
+<!-- 2. newsletter/emails/booking_confirmation.html -->
+<!-- ============================================================================ -->
+{% extends 'newsletter/emails/base_email.html' %}
+
+{% block title %}Booking Confirmation{% endblock %}
+
+{% block header_title %}🥋 Booking Confirmed{% endblock %}
+
+{% block content %}
+<h2>Hi {{ user.get_full_name|default:user.username }}!</h2>
+
+<p>Your booking has been successfully confirmed!</p>
+
+<div class="info-box">
+    <strong>Booking Reference:</strong> {{ booking.booking_reference }}<br>
+    <strong>Class:</strong> {{ karate_class.title }}<br>
+    <strong>Date:</strong> {{ booking.schedule.date|date:"F d, Y" }}<br>
+    <strong>Time:</strong> {{ booking.schedule.start_time }} - {{ booking.schedule.end_time }}<br>
+    <strong>Location:</strong> {{ karate_class.location }}<br>
+    <strong>Price:</strong> ${{ booking.total_price }}
+</div>
+
+<h3>Payment Status: {{ booking.payment_status }}</h3>
+
+{% if booking.payment_status != 'Paid' %}
+<p style="color: #ff6b6b; font-weight: bold;">⚠️ Please complete your payment to secure your spot.</p>
+<a href="{{ site_url }}/bookings/{{ booking.id }}/payment/" class="button">Complete Payment</a>
+{% endif %}
+
+<hr class="divider">
+
+<h3>What to Bring:</h3>
+<ul>
+    <li>Comfortable workout attire</li>
+    <li>Water bottle</li>
+    <li>Towel</li>
+    <li>This booking confirmation (digital or printed)</li>
+</ul>
+
+<p>We look forward to seeing you on the mat!</p>
+
+<a href="{{ site_url }}/bookings/{{ booking.id }}/" class="button">View Booking Details</a>
+{% endblock %}

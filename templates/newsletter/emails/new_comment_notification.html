@@ -1,0 +1,30 @@
+<!-- ============================================================================ -->
+<!-- 1. newsletter/emails/new_comment_notification.html -->
+<!-- ============================================================================ -->
+{% extends 'newsletter/emails/base_email.html' %}
+
+{% block title %}New Comment on Your Post{% endblock %}
+
+{% block header_title %}💬 New Comment{% endblock %}
+
+{% block content %}
+<h2>Hi {{ post.author.get_full_name|default:post.author.username }}!</h2>
+
+<p>Great news! Someone just commented on your blog post.</p>
+
+<div class="info-box">
+    <strong>Post:</strong> {{ post.title }}<br>
+    <strong>Commenter:</strong> {{ commenter }}<br>
+    <strong>Date:</strong> {{ comment.created_at|date:"F d, Y g:i A" }}
+</div>
+
+<p><strong>Comment:</strong></p>
+<p style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; font-style: italic;">
+    {{ comment.content }}
+</p>
+
+<a href="{{ site_url }}/blog/{{ post.slug }}/#comment-{{ comment.id }}" class="button">View Comment</a>
+
+<p>Keep the conversation going and engage with your readers!</p>
+{% endblock %}
+

@@ -1,0 +1,348 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load cloudinary %}
+{% block title %}Store | Kenya Karate Federation{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="relative h-[500px] bg-black flex items-center justify-center overflow-hidden">
+    <img src="{% static 'images/store-hero.jpg' %}" alt="Karate Store" 
+         class="absolute w-full h-full object-cover opacity-30">
+    
+    <div class="relative z-10 text-center px-6">
+        <h1 class="text-5xl md:text-7xl font-black text-white mb-6">
+            Premium Karate <span class="text-[#FFCD00]">Equipment</span>
+        </h1>
+        <p class="text-xl text-white max-w-2xl mx-auto">
+           Authentic gear for champions
+        </p>
+    </div>
+</section>
+<!-- Hero Section 
+<section class="relative h-[500px] bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
+    <div class="absolute inset-0 bg-black/40"></div>
+    <div class="relative z-10 text-center px-6 max-w-4xl mx-auto">
+        <h1 class="text-5xl md:text-7xl font-black text-white mb-6 leading-tight">
+            Premium Karate <span class="text-[#FFCD00]">Equipment</span>
+        </h1>
+        <p class="text-xl text-gray-200 max-w-2xl mx-auto">
+            Authentic gear for champions
+        </p>
+    </div>
+</section>-->
+
+<!-- Filter & Search -->
+<section class="py-6 bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="flex flex-col lg:flex-row gap-4 items-center justify-between">
+            <!-- Categories -->
+            <div class="flex flex-wrap gap-2 justify-center lg:justify-start">
+                <a href="{% url 'store:product_list' %}" 
+                   class="px-5 py-2.5 text-sm font-semibold rounded-lg transition-all
+                          {% if not current_category %}bg-[#FFCD00] text-black{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">
+                    All Products
+                </a>
+                {% for category in categories %}
+                <a href="{% url 'store:product_list' %}?category={{ category.slug }}" 
+                   class="px-5 py-2.5 text-sm font-semibold rounded-lg transition-all
+                          {% if current_category == category.slug %}bg-[#7ccf00] text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">
+                    {{ category.name }}
+                </a>
+                {% endfor %}
+            </div>
+            
+            <!-- Search & Sort -->
+            <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+                <!-- Sort -->
+                <select onchange="window.location.href='?sort='+this.value{% if current_category %}+'&category={{ current_category }}'{% endif %}" 
+                        class="px-4 py-2.5 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-lg focus:ring-2 focus:ring-[#FFCD00] focus:border-transparent">
+                    <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Newest</option>
+                    <option value="price_low" {% if current_sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                    <option value="price_high" {% if current_sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                    <option value="popular" {% if current_sort == 'popular' %}selected{% endif %}>Most Popular</option>
+                    <option value="name" {% if current_sort == 'name' %}selected{% endif %}>Name A-Z</option>
+                </select>
+                
+                <!-- Search -->
+                <form method="GET" class="flex">
+                    <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search products..." 
+                           class="flex-1 lg:w-64 px-4 py-2.5 bg-white border border-gray-300 text-gray-900 text-sm rounded-l-lg focus:ring-2 focus:ring-[#FFCD00] focus:border-transparent">
+                    <button type="submit" 
+                            class="px-5 py-2.5 bg-[#FFCD00] hover:bg-[#e6b800] text-black font-semibold rounded-r-lg transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Product Grid -->
+<section class="py-12 bg-gray-50 min-h-screen">
+    <div class="max-w-7xl mx-auto px-6">
+        {% if products %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for product in products %}
+            <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
+                <!-- Image -->
+                <div class="relative h-64 bg-gray-100 overflow-hidden">
+                    <a href="{% url 'store:product_detail' product.slug %}">
+                       {% if product.image %}
+    <img src="{{ product.image.url }}" alt="{{ product.name }}" 
+         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+{% else %}
+    <img src="{% static 'images/default-product.jpg' %}" alt="No image available" 
+         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+{% endif %}
+
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </a>
+                    
+                    <!-- Badges -->
+                    <div class="absolute top-3 right-3 flex flex-col gap-2">
+                        {% if not product.is_in_stock %}
+                        <span class="px-3 py-1 bg-red-600 text-white text-xs font-bold rounded-full">
+                            Out of Stock
+                        </span>
+                        {% elif product.is_low_stock %}
+                        <span class="px-3 py-1 bg-orange-500 text-white text-xs font-bold rounded-full">
+                            Low Stock
+                        </span>
+                        {% endif %}
+                        
+                        {% if product.discount_percentage %}
+                        <span class="px-3 py-1 bg-[#7ccf00] text-white text-xs font-bold rounded-full">
+                            -{{ product.discount_percentage }}%
+                        </span>
+                        {% endif %}
+                        
+                        {% if product.is_featured %}
+                        <span class="px-3 py-1 bg-[#FFCD00] text-black text-xs font-bold rounded-full">
+                            Featured
+                        </span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Wishlist -->
+                    {% if user.is_authenticated %}
+                    <button onclick="toggleWishlist({{ product.pk }}, this)" 
+                            class="absolute top-3 left-3 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all">
+                        <svg class="w-5 h-5 text-gray-600 hover:text-red-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                    </button>
+                    {% endif %}
+                </div>
+                
+                <!-- Content -->
+                <div class="p-5 flex flex-col flex-1">
+                    <a href="{% url 'store:product_detail' product.slug %}" class="text-lg font-bold text-gray-900 mb-2 hover:text-[#FFCD00] transition-colors line-clamp-2">
+                        {{ product.name }}
+                    </a>
+                    
+                    <p class="text-gray-600 text-sm mb-3 flex-1 line-clamp-2">
+                        {{ product.short_description|default:product.description|truncatewords:12 }}
+                    </p>
+                    
+                    <!-- Rating -->
+                    {% if product.review_count > 0 %}
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="flex">
+                            {% for i in "12345" %}
+                            <svg class="w-4 h-4 {% if forloop.counter <= product.average_rating %}text-[#FFCD00]{% else %}text-gray-300{% endif %}" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                            {% endfor %}
+                        </div>
+                        <span class="text-gray-500 text-sm">({{ product.review_count }})</span>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Price -->
+                    <div class="mb-4 pt-3 border-t border-gray-100">
+                        {% if product.discount_price %}
+                        <div class="flex items-center gap-2">
+                            <span class="text-2xl font-black text-[#FFCD00]">KES {{ product.discount_price }}</span>
+                            <span class="text-base text-gray-400 line-through">KES {{ product.price }}</span>
+                        </div>
+                        {% else %}
+                        <span class="text-2xl font-black text-gray-900">KES {{ product.price }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="space-y-2">
+                        {% if product.is_in_stock %}
+                        <button onclick="addToCart({{ product.pk }}, this)" 
+                                class="block w-full text-center px-4 py-3 bg-[#FFCD00] hover:bg-[#e6b800] text-black font-bold rounded-lg transition-all flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
+                            </svg>
+                            Add to Cart
+                        </button>
+                        <a href="{% url 'store:product_detail' product.slug %}" 
+                           class="block w-full text-center px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 font-semibold border border-gray-300 rounded-lg transition-all">
+                            View Details
+                        </a>
+                        {% else %}
+                        <button disabled class="block w-full text-center px-4 py-3 bg-gray-100 text-gray-400 font-semibold rounded-lg cursor-not-allowed">
+                            Out of Stock
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <div class="mt-12 flex justify-center items-center gap-2">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" 
+               class="px-4 py-2 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                Previous
+            </a>
+            {% endif %}
+            
+            <span class="px-5 py-2 bg-[#FFCD00] text-black font-bold rounded-lg">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+            
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" 
+               class="px-4 py-2 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                Next
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        {% else %}
+        <!-- Empty State -->
+        <div class="text-center py-20">
+            <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-2xl flex items-center justify-center">
+                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                </svg>
+            </div>
+            <h2 class="text-3xl font-bold text-gray-900 mb-3">No products found</h2>
+            <p class="text-gray-600 mb-8">Try adjusting your search or filters</p>
+            <a href="{% url 'store:product_list' %}" 
+               class="inline-block px-8 py-3 bg-[#FFCD00] hover:bg-[#e6b800] text-black font-bold rounded-lg transition-colors">
+                View All Products
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-[#FFCD00] rounded-2xl flex items-center justify-center mb-6 mx-auto">
+                    <svg class="w-8 h-8 text-black" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>
+                        <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Fast Delivery</h3>
+                <p class="text-gray-600">Free shipping on orders over KES 5,000</p>
+            </div>
+
+            <div class="text-center">
+                <div class="w-16 h-16 bg-[#7ccf00] rounded-2xl flex items-center justify-center mb-6 mx-auto">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Authentic Gear</h3>
+                <p class="text-gray-600">100% genuine karate equipment</p>
+            </div>
+
+            <div class="text-center">
+                <div class="w-16 h-16 bg-[#2b7fff] rounded-2xl flex items-center justify-center mb-6 mx-auto">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Secure Payment</h3>
+                <p class="text-gray-600">Safe MPesa transactions</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function addToCart(productId, button) {
+    fetch(`/store/cart/add/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: new FormData()
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const cartCount = document.getElementById('cart-count');
+            if (cartCount) cartCount.textContent = data.cart_count;
+            showMessage(data.message, 'success');
+        } else {
+            showMessage(data.message, 'error');
+        }
+    });
+}
+
+function toggleWishlist(productId, button) {
+    fetch(`/store/wishlist/toggle/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: new FormData()
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const svg = button.querySelector('svg');
+            if (data.in_wishlist) {
+                svg.setAttribute('fill', 'currentColor');
+                svg.classList.add('text-red-500');
+            } else {
+                svg.setAttribute('fill', 'none');
+                svg.classList.remove('text-red-500');
+            }
+            showMessage(data.message, 'success');
+        }
+    });
+}
+
+function showMessage(message, type) {
+    const colors = {
+        'success': 'bg-green-50 border-green-500 text-green-800',
+        'error': 'bg-red-50 border-red-500 text-red-800',
+        'info': 'bg-blue-50 border-blue-500 text-blue-800'
+    };
+    
+    const div = document.createElement('div');
+    div.className = `fixed top-20 right-4 px-6 py-4 border-l-4 ${colors[type]} font-semibold rounded-lg shadow-lg z-50`;
+    div.textContent = message;
+    document.body.appendChild(div);
+    
+    setTimeout(() => {
+        div.style.opacity = '0';
+        div.style.transition = 'opacity 300ms';
+        setTimeout(() => div.remove(), 300);
+    }, 3000);
+}
+</script>
+
+{% endblock %}

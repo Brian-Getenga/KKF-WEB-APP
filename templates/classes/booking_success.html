@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Booking Confirmed | Kenya Karate Federation{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Print styles - hide unnecessary elements when printing */
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+        #print-section, #print-section * {
+            visibility: visible;
+        }
+        #print-section {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+        .no-print {
+            display: none !important;
+        }
+        .print-only {
+            display: block !important;
+        }
+        .bg-[#f5f5f5] {
+            background: white !important;
+        }
+        a {
+            text-decoration: none;
+            color: #525252 !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="min-h-screen bg-[#f5f5f5] py-16 px-6">
+    <div class="max-w-4xl mx-auto">
+        
+        <!-- Print & Share Buttons -->
+        <div class="flex justify-end gap-4 mb-8 no-print">
+            <button onclick="window.print()" 
+                    class="flex items-center gap-2 px-6 py-3 bg-[#FFCD00] text-black font-bold rounded hover:bg-[#FBBF24] transition-colors shadow-md">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" 
+                          d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                </svg>
+                Print Confirmation
+            </button>
+            
+            <button onclick="shareBooking()" 
+                    class="flex items-center gap-2 px-6 py-3 bg-[#7ccf00] text-white font-bold rounded hover:bg-[#00c950] transition-colors shadow-md">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" 
+                          d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a6 6 0 110-2.684m9 9v-3m0 0h-3m3 0a6 6 0 10-12 0 6 6 0 0012 0z"/>
+                </svg>
+                Share
+            </button>
+        </div>
+
+        <div id="print-section">
+            <!-- Success Header -->
+            <div class="text-center mb-12">
+                <svg class="w-24 h-24 mx-auto text-[#7ccf00] mb-6" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <h1 class="text-5xl md:text-6xl font-black text-[#525252] mb-4">Booking Confirmed!</h1>
+                <div class="w-32 h-1 bg-[#FFCD00] mx-auto mb-6"></div>
+                <p class="text-xl text-[#525252] font-semibold">🎉 Your class has been successfully booked</p>
+                <p class="text-[#525252] text-lg mt-2">Get ready for an amazing karate experience!</p>
+            </div>
+
+            <!-- Booking Reference -->
+            <div class="text-center mb-10">
+                <div class="inline-flex items-center gap-3 px-6 py-3 bg-[#FFCD00] text-black font-bold rounded-full">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-lg">Reference: {{ booking.booking_reference }}</span>
+                </div>
+            </div>
+
+            <!-- Main Card -->
+            <div class="bg-white rounded border-2 border-[#d6d3d1] p-8 md:p-12 shadow-sm">
+                
+                <!-- Class Details -->
+                <div class="mb-10">
+                    <h2 class="text-3xl font-black text-[#525252] mb-6 pb-4 border-b-4 border-[#FFCD00]">Class Details</h2>
+                    
+                    <div class="mb-8">
+                        <p class="text-[#525252] text-sm font-semibold mb-2">Class Name</p>
+                        <p class="text-4xl font-black text-[#FFCD00]">{{ booking.karate_class.title }}</p>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Instructor -->
+                        <div class="bg-[#f5f5f5] p-6 rounded border-2 border-[#d6d3d1]">
+                            <p class="text-[#525252] text-sm font-semibold mb-2">Instructor</p>
+                            <p class="text-2xl font-bold text-[#525252]">{{ booking.karate_class.instructor.name }}</p>
+                            <p class="text-[#525252]">🥋 {{ booking.karate_class.instructor.belt_rank }}</p>
+                        </div>
+
+                        <!-- Schedule -->
+                        <div class="bg-[#f5f5f5] p-6 rounded border-2 border-[#d6d3d1]">
+                            <p class="text-[#525252] text-sm font-semibold mb-2">Schedule</p>
+                            <p class="text-2xl font-bold text-[#525252]">{{ booking.schedule.day_of_week }}</p>
+                            <p class="text-[#525252]">⏰ {{ booking.schedule.start_time|time:"g:i A" }} - {{ booking.schedule.end_time|time:"g:i A" }}</p>
+                        </div>
+
+                        <!-- Location -->
+                        <div class="bg-[#f5f5f5] p-6 rounded border-2 border-[#d6d3d1]">
+                            <p class="text-[#525252] text-sm font-semibold mb-2">Location</p>
+                            <p class="text-2xl font-bold text-[#525252]">{{ booking.schedule.location }}</p>
+                        </div>
+
+                        <!-- Level & Type -->
+                        <div class="bg-[#f5f5f5] p-6 rounded border-2 border-[#d6d3d1]">
+                            <p class="text-[#525252] text-sm font-semibold mb-2">Level</p>
+                            <p class="text-2xl font-bold text-[#525252]">{{ booking.karate_class.level }}</p>
+                            <p class="text-[#525252] mt-3">Booking Type: <strong>{{ booking.booking_type }}</strong></p>
+                        </div>
+                    </div>
+
+                    <!-- Payment Info -->
+                    {% if booking.amount_paid > 0 %}
+                    <div class="mt-8 p-6 bg-[#f5f5f5] rounded border-2 border-[#7ccf00]">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[#525252] font-bold text-xl">Amount Paid:</span>
+                            <span class="text-4xl font-black text-[#7ccf00]">KES {{ booking.amount_paid }}</span>
+                        </div>
+                        {% if booking.mpesa_receipt_number %}
+                        <div class="text-sm pt-3 border-t border-[#d6d3d1]">
+                            <span class="text-[#525252] font-semibold">M-Pesa Receipt Number:</span>
+                            <span class="font-mono ml-3 bg-white px-3 py-1 rounded border border-[#d6d3d1]">
+                                {{ booking.mpesa_receipt_number }}
+                            </span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Email Confirmation Notice -->
+                <div class="bg-[#f5f5f5] p-6 rounded border-2 border-[#FFCD00] mb-10">
+                    <p class="text-[#525252] font-bold mb-2">📧 Confirmation Email Sent</p>
+                    <p class="text-[#525252]">
+                        A detailed confirmation has been sent to <strong>{{ user.email }}</strong> with all your booking information.
+                    </p>
+                </div>
+
+                <!-- What to Bring -->
+                <div class="mb-10">
+                    <h3 class="text-2xl font-black text-[#525252] mb-6 pb-4 border-b-4 border-[#FFCD00]">
+                        What to Bring to Your First Class
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-4">
+                            <svg class="w-6 h-6 text-[#7ccf00] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-[#525252]"><strong>Comfortable athletic wear</strong> - Gi will be provided for trial classes</span>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <svg class="w-6 h-6 text-[#7ccf00] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-[#525252]"><strong>Water bottle</strong> - Stay hydrated during training</span>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <svg class="w-6 h-6 text-[#7ccf00] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-[#525252]"><strong>Positive attitude</strong> - Come ready to learn and have fun!</span>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <svg class="w-6 h-6 text-[#7ccf00] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-[#525252]"><strong>Arrive 10 minutes early</strong> - To check in and prepare</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 mt-10 no-print">
+                <a href="{% url 'accounts:dashboard' %}" 
+                   class="flex-1 px-8 py-4 bg-[#7ccf00] text-white font-black text-lg text-center rounded hover:bg-[#00c950] transition-colors flex items-center justify-center gap-2">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                    </svg>
+                    View Dashboard
+                </a>
+                <a href="{% url 'classes:class_list' %}" 
+                   class="flex-1 px-8 py-4 bg-white text-[#525252] font-black text-lg text-center rounded border-2 border-[#d6d3d1] hover:border-[#FFCD00] transition-colors flex items-center justify-center gap-2">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"/>
+                    </svg>
+                    Browse More Classes
+                </a>
+            </div>
+
+            <!-- Support -->
+            <div class="text-center mt-12 no-print">
+                <p class="text-[#525252] mb-4">Need help or want to reschedule?</p>
+                <a href="{% url 'core:contact' %}" 
+                   class="inline-flex items-center gap-2 px-6 py-3 bg-[#FFCD00] text-black font-bold rounded hover:bg-[#FBBF24] transition-colors">
+                    Contact Support
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+// Share functionality using Web Share API (mobile-friendly)
+function shareBooking() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'My Karate Class Booking - Kenya Karate Federation',
+            text: 'I just booked a karate class! Ref: {{ booking.booking_reference }}',
+            url: window.location.href
+        }).catch(console.error);
+    } else {
+        // Fallback: copy link to clipboard
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            alert('Booking link copied to clipboard!');
+        }).catch(() => {
+            alert('Unable to copy link. Please copy the URL manually.');
+        });
+    }
+}
+</script>
+
+{% endblock %}

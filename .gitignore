@@ -1,0 +1,71 @@
+# ------------------------
+# Python / Django
+# ------------------------
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+
+
+# Ignore all log files
+logs/*.log
+
+# Keep .gitkeep so Git still tracks the folder
+!logs/.gitkeep
+
+
+# ------------------------
+# Virtual Environment
+# ------------------------
+venv/
+env/
+ENV/
+.venv/
+.virtualenv/
+
+# ------------------------
+# Environment / Secrets
+# ------------------------
+.env
+.env.*          # Ignore any other env files (except .env.example)
+!.env.example   # Keep .env.example in Git
+
+# ------------------------
+# Django Media (User Uploads)
+# ------------------------
+/media/
+
+# ------------------------
+# Django Static (Generated)
+# ------------------------
+/staticfiles/    # Collected static (from collectstatic)
+# Note: keep your /static/ app folders if you want committed static images
+
+# ------------------------
+# IDE / Editor / OS
+# ------------------------
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# ------------------------
+# Node / Frontend (if using)
+# ------------------------
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# ------------------------
+# Coverage / Testing
+# ------------------------
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+nosetests.xml
